@@ -1,0 +1,305 @@
+<tool id="W4MClassFilter" name="W4MClassFilter" version="0.98.1">
+  <description>Filter W4M data by sample class</description>
+
+  <requirements>
+    <requirement type="package" version="3.3.1">r-base</requirement>
+    <requirement type="package" version="1.1_4">r-batch</requirement>
+    <!-- TODO replace version with 0.98.1 when the conda build is available -->
+    <requirement type="package" version="0.98.0">w4mclassfilter</requirement>
+  </requirements>
+
+  <stdio>
+    <exit_code range="1:" level="fatal" />
+  </stdio>
+
+
+  <command detect_errors="aggressive"><![CDATA[
+  Rscript $__tool_directory__/w4mclassfilter_wrapper.R
+  dataMatrix_in "$dataMatrix_in"
+  sampleMetadata_in "$sampleMetadata_in"
+  variableMetadata_in "$variableMetadata_in"
+  sampleclassNames "$sampleclassNames"
+  inclusive "$inclusive"
+  classnameColumn "$classnameColumn"
+  samplenameColumn "$samplenameColumn"
+  dataMatrix_out "$dataMatrix_out"
+  sampleMetadata_out "$sampleMetadata_out"
+  variableMetadata_out "$variableMetadata_out"
+  information "$information"
+  ]]></command>
+
+  <inputs>
+    <param name="dataMatrix_in" label="Data matrix file" type="data" format="tabular" help="variable x sample, decimal: '.', missing: NA, mode: numerical, sep: tabular" />
+    <param name="sampleMetadata_in" label="Sample metadata file" type="data" format="tabular" help="sample x metadata, decimal: '.', missing: NA, mode: character and numerical, sep: tabular" />
+    <param name="variableMetadata_in" label="Variable metadata file" type="data" format="tabular" help="variable x metadata, decimal: '.', missing: NA, mode: character and numerical, sep: tabular" />
+    <param name="sampleclassNames" label="Names of sample classes" type="text" value = "" help="comma-separated names of sample classes to filter in or out; defaults to no names" />
+    <param name="inclusive" label="Include named classes" type="select" help="filter-in - include only the named sample classes; filter-out (the default) - exclude only the named sample classes">
+      <option value="TRUE">filter-in</option>
+      <option value="FALSE" selected="true">filter-out</option>
+    </param>
+    <param name="classnameColumn" label="Column that names the sample-class" type="text" value = "class" help="name of the column in sample metadata that has the values to be tested against the 'classes' input parameter - defaults to 'class'" />
+    <param name="samplenameColumn" label="Column that names the sample" type="text" value = "sampleMetadata" help="name of the column in sample metadata that has the name of the sample - defaults to 'sampleMetadata'" />
+  </inputs>
+  <outputs>
+    <data name="dataMatrix_out" label="${tool.name}_${dataMatrix_in.name}" format="tabular" ></data>
+    <data name="sampleMetadata_out" label="${tool.name}_${sampleMetadata_in.name}" format="tabular" ></data>
+    <data name="variableMetadata_out" label="${tool.name}_${variableMetadata_in.name}" format="tabular" ></data>
+    <data name="information" label="${tool.name}__information.txt" format="txt"/>
+  </outputs>
+
+  <tests>
+    <test>
+      <param name="dataMatrix_in" value="input_dataMatrix.tsv"/>
+      <param name="sampleMetadata_in" value="input_sampleMetadata.tsv"/>
+      <param name="variableMetadata_in" value="input_variableMetadata.tsv"/>
+      <param name="classnameColumn" value="gender"/>
+      <param name="sampleclassNames" value="M"/>
+      <param name="samplenameColumn" value="sampleMetadata"/>
+      <param name="inclusive" value="filter-in"/>
+      <param name="information" value="test-information.txt"/>
+      <output name="dataMatrix_out">
+        <assert_contents>
+          <not_has_text text="HU_028" />
+          <not_has_text text="HU_051" />
+          <not_has_text text="HU_060" />
+          <not_has_text text="HU_110" />
+          <not_has_text text="HU_149" />
+          <not_has_text text="HU_152" />
+          <not_has_text text="HU_175" />
+          <not_has_text text="HU_178" />
+          <not_has_text text="HU_185" />
+          <not_has_text text="HU_204" />
+          <not_has_text text="HU_208" />
+          <has_text     text="HU_017" />
+          <has_text     text="HU_034" />
+          <has_text     text="HU_078" />
+          <has_text     text="HU_091" />
+          <has_text     text="HU_093" />
+          <has_text     text="HU_099" />
+          <has_text     text="HU_130" />
+          <has_text     text="HU_134" />
+          <has_text     text="HU_138" />
+          <has_text     text="HMDB03193" />
+          <not_has_text text="HMDB00822" />
+          <has_text     text="HMDB01101" />
+          <has_text     text="HMDB01101.1" />
+          <has_text     text="HMDB10348" />
+          <has_text     text="HMDB59717" />
+          <has_text     text="HMDB13189" />
+          <has_text     text="HMDB00299" />
+          <has_text     text="HMDB00191" />
+          <has_text     text="HMDB00518" />
+          <has_text     text="HMDB00715" />
+          <has_text     text="HMDB01032" />
+          <has_text     text="HMDB00208" />
+          <has_text     text="HMDB04824" />
+          <has_text     text="HMDB00512" />
+          <has_text     text="HMDB00251" />
+        </assert_contents>
+      </output>
+    </test>
+    <test>
+      <param name="dataMatrix_in" value="input_dataMatrix.tsv"/>
+      <param name="sampleMetadata_in" value="input_sampleMetadata.tsv"/>
+      <param name="variableMetadata_in" value="input_variableMetadata.tsv"/>
+      <param name="classnameColumn" value="gender"/>
+      <param name="sampleclassNames" value="M"/>
+      <param name="samplenameColumn" value="sampleMetadata"/>
+      <param name="inclusive" value="filter-in"/>
+      <param name="information" value="test-information.txt"/>
+      <output name="sampleMetadata_out">
+        <assert_contents>
+          <not_has_text text="HU_028" />
+          <not_has_text text="HU_051" />
+          <not_has_text text="HU_060" />
+          <not_has_text text="HU_110" />
+          <not_has_text text="HU_149" />
+          <not_has_text text="HU_152" />
+          <not_has_text text="HU_175" />
+          <not_has_text text="HU_178" />
+          <not_has_text text="HU_185" />
+          <not_has_text text="HU_204" />
+          <not_has_text text="HU_208" />
+          <has_text     text="HU_017" />
+          <has_text     text="HU_034" />
+          <has_text     text="HU_078" />
+          <has_text     text="HU_091" />
+          <has_text     text="HU_093" />
+          <has_text     text="HU_099" />
+          <has_text     text="HU_130" />
+          <has_text     text="HU_134" />
+          <has_text     text="HU_138" />
+        </assert_contents>
+      </output>
+    </test>
+    <test>
+      <param name="dataMatrix_in" value="input_dataMatrix.tsv"/>
+      <param name="sampleMetadata_in" value="input_sampleMetadata.tsv"/>
+      <param name="variableMetadata_in" value="input_variableMetadata.tsv"/>
+      <param name="classnameColumn" value="gender"/>
+      <param name="sampleclassNames" value="M"/>
+      <param name="samplenameColumn" value="sampleMetadata"/>
+      <param name="inclusive" value="filter-in"/>
+      <param name="information" value="test-information.txt"/>
+      <output name="variableMetadata_out">
+        <assert_contents>
+          <has_text     text="HMDB03193" />
+          <not_has_text text="HMDB00822" />
+          <has_text     text="HMDB01101" />
+          <has_text     text="HMDB01101.1" />
+          <has_text     text="HMDB10348" />
+          <has_text     text="HMDB59717" />
+          <has_text     text="HMDB13189" />
+          <has_text     text="HMDB00299" />
+          <has_text     text="HMDB00191" />
+          <has_text     text="HMDB00518" />
+          <has_text     text="HMDB00715" />
+          <has_text     text="HMDB01032" />
+          <has_text     text="HMDB00208" />
+          <has_text     text="HMDB04824" />
+          <has_text     text="HMDB00512" />
+          <has_text     text="HMDB00251" />
+        </assert_contents>
+      </output>
+    </test>
+  </tests>
+
+
+
+  <help>
+
+.. class:: infomark
+
+**Author**	Arthur Eschenlauer (University of Minnesota, esch0041@umn.edu)
+
+---------------------------------------------------
+
+.. class:: infomark
+
+**R package**
+
+The *w4mclassfilter* package is available from the Hegeman lab github repository (https://github.com/HegemanLab/w4mclassfilter/releases).
+
+---------------------------------------------------
+
+.. class:: infomark
+
+**Tool updates**
+
+See the **NEWS** section at the bottom of this page
+
+---------------------------------------------------
+
+==============================================
+Multivariate analysis with PCA and (O)PLS(-DA)
+==============================================
+
+-----------
+Description
+-----------
+
+Filter set of retention-corrected W4M files (dataMatrix, sampleMetadata, variableMetadata) by sample class
+
+--------
+Comments
+--------
+
+The *inclusive* parameter indicates:
+  - when 'filter-in', that only the sample-classes named should be included
+  - when 'filter-out', that all sample-classes should be included excepting the sample-classes named
+
+-----------
+Input files
+-----------
+
++---------------------------+------------+
+| File                      |   Format   |
++===========================+============+
+| 1)  Data matrix           |   tabular  |
++---------------------------+------------+
+| 2)  Sample metadata       |   tabular  |
++---------------------------+------------+
+| 3)  Variable metadata     |   tabular  |
++---------------------------+------------+
+
+
+----------
+Parameters
+----------
+
+Data matrix file
+	| variable x sample **dataMatrix** tabular separated file of the numeric data matrix, with . as decimal, and NA for missing values; the table must not contain metadata apart from row and column names; the row and column names must be identical to the rownames of the sample and variable metadata, respectively (see below)
+	|
+
+Sample metadata file
+	| sample x metadata **sampleMetadata** tabular separated file of the numeric and/or character sample metadata, with . as decimal and NA for missing values
+	|
+
+Variable metadata file
+	| variable x metadata **variableMetadata** tabular separated file of the numeric and/or character variable metadata, with . as decimal and NA for missing values
+	|
+
+Names of sample classes (default = no names)
+	| comma-separated names of sample classes to include or exclude
+	|
+
+Include named classes (default = filter-out)
+  | *filter-in* - include only the named sample classes
+  | *filter-out* - exclude only the named sample classes
+	|
+
+Column that names the sample-class (default = 'class')
+	| name of the column in sample metadata that has the values to be tested against the 'classes' input parameter
+	|
+
+Column that names the sample (default = 'sampleMetadata')
+	| name of the column in sample metadata that has the name of the sample
+	|
+
+
+------------
+Output files
+------------
+
+
+sampleMetadata_out.tabular
+	| **sampleMetadata** tabular separated file identical to the file given as argument, excepting lacking rows for samples that have been filtered out
+	|
+
+variableMetadata_out.tabular
+	| **variableMetadata** tabular separated file identical to the file given as argument, excepting lacking rows for variables (xC-MS features) that have been filtered out (because of zero variance)
+	|
+
+dataMatrix_out.tabular
+	| **dataMatrix** tabular separated file identical to the file given as argument, excepting lacking columns for samples that have been filtered out (because of the sample-classes specified in the input parameters) and rows for variables (xC-MS features) that have been filtered out (because of zero variance)
+	|
+
+information.txt
+	| Text file with all messages and warnings generated during the computation
+	|
+
+---------------------------------------------------
+
+----
+NEWS
+----
+
+CHANGES IN VERSION 0.98.1
+========================
+
+NEW FEATURES
+
+First release - R package that implements filtering of W4M data matrix, variable metadata, and sample metadata by class of sample.
+
+*dataMatrix* *is* modified by the tool, so it *does* appear as an output file
+
+INTERNAL MODIFICATIONS
+
+none
+
+  </help>
+  <citations>
+  </citations>
+</tool>
+<!-- vim: et sw=2 ts=2 :
+-->
