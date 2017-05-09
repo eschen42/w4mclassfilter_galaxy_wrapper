@@ -4,8 +4,7 @@
   <requirements>
     <requirement type="package" version="3.3.1">r-base</requirement>
     <requirement type="package" version="1.1_4">r-batch</requirement>
-    <!-- TODO replace version with 0.98.1 when the conda build is available -->
-    <requirement type="package" version="0.98.0">w4mclassfilter</requirement>
+    <requirement type="package" version="0.98.1">w4mclassfilter</requirement>
   </requirements>
 
   <stdio>
