@@ -1,0 +1,24 @@
+#!/bin/bash
+
+# abridged transcript of the steps that I used to test this wrapper
+
+ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Linuxbrew/install/master/install)"
+
+sudo apt-get install build-essential
+
+cat >> ~/.bashrc << .
+# ACE
+export PATH="/home/backdoor/.linuxbrew/bin:$PATH"
+export MANPATH="/home/backdoor/.linuxbrew/share/man:$MANPATH"
+export INFOPATH="/home/backdoor/.linuxbrew/share/info:$INFOPATH"
+.
+
+brew update
+brew install python
+brew tap galaxyproject/tap
+brew install planemo
+
+git clone https://github.com/HegemanLab/w4mclassfilter_galaxy_wrapper.git
+cd w4mclassfilter_galaxy_wrapper/
+
+./run_test.sh
