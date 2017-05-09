@@ -10,4 +10,4 @@ planemo conda_install .
 planemo test --conda_dependency_resolution w4mclassfilter.xml 2>&1 | grep -v -i observer | tee test_log.txt
 
 # summarize warnings and errors to command line output
-grep -E "(ERROR)|(WARNING)" 0.98.1/test_log.txt
+grep -E "(ERROR)|(WARNING)" test_log.txt | grep -v samtools | grep -v "Dynamic Display Application links" | grep -v "twobit.loc"

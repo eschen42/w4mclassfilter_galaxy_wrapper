@@ -171,7 +171,7 @@
 
 **Author**	Arthur Eschenlauer (University of Minnesota, esch0041@umn.edu)
 
----------------------------------------------------
+--------------------------------------------------------------------------
 
 .. class:: infomark
 
@@ -179,7 +179,7 @@
 
 The *w4mclassfilter* package is available from the Hegeman lab github repository (https://github.com/HegemanLab/w4mclassfilter/releases).
 
----------------------------------------------------
+-----------------------------------------------------------------------------------------------------------------------------------------
 
 .. class:: infomark
 
@@ -190,7 +190,7 @@ See the **NEWS** section at the bottom of this page
 ---------------------------------------------------
 
 ==============================================
-Multivariate analysis with PCA and (O)PLS(-DA)
+Filter Workflow4Metabolomics data matrix files
 ==============================================
 
 -----------
@@ -277,14 +277,14 @@ information.txt
 	| Text file with all messages and warnings generated during the computation
 	|
 
----------------------------------------------------
+-----------------------------------------------------------------------------
 
 ----
 NEWS
 ----
 
 CHANGES IN VERSION 0.98.1
-========================
+=========================
 
 NEW FEATURES
 

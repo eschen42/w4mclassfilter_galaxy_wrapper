@@ -94,8 +94,8 @@ sampleclassNames <- as.character(argVc["sampleclassNames"])
 #     sampleclassNames <- strsplit(x = sampleclassNames, split = ",", fixed = TRUE)[[1]]
 # }
 sampleclassNames <- strsplit(x = sampleclassNames, split = ",", fixed = TRUE)[[1]]
-inclusive <- as.character(argVc["inclusive"])
-inclusive <- "filter-in" == as.character(inclusive)
+inclusive <- as.logical(argVc["inclusive"])
+# print(sprintf("inclusive = '%s'", as.character(inclusive)))
 classnameColumn <- as.character(argVc["classnameColumn"])
 samplenameColumn <- as.character(argVc["samplenameColumn"])
 
@@ -129,8 +129,20 @@ my_print("\nEnd of '", modNamC, "' Galaxy module call: ",
 
 #sink()
 
+if (!file.exists(dataMatrix_out)) {
+  print(sprintf("ERROR %s::w4m_filter_by_sample_class - file '%s' was not created", modNamC, dataMatrix_out))
+}# else { print(sprintf("INFO %s::w4m_filter_by_sample_class - file '%s' was exists", modNamC, dataMatrix_out)) }
+
+if (!file.exists(variableMetadata_out)) {
+  print(sprintf("ERROR %s::w4m_filter_by_sample_class - file '%s' was not created", modNamC, variableMetadata_out))
+} # else { print(sprintf("INFO %s::w4m_filter_by_sample_class - file '%s' was exists", modNamC, variableMetadata_out)) }
+
+if (!file.exists(sampleMetadata_out)) {
+  print(sprintf("ERROR %s::w4m_filter_by_sample_class - file '%s' was not created", modNamC, sampleMetadata_out))
+} # else { print(sprintf("INFO %s::w4m_filter_by_sample_class - file '%s' was exists", modNamC, sampleMetadata_out)) }
+
 if( !result ) {
-  stop(sprintf("%s::w4m_filter_by_sample_class - method failed", modNamC))
+  stop(sprintf("ERROR %s::w4m_filter_by_sample_class - method failed", modNamC))
 }
 
 rm(list = ls())
