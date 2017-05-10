@@ -1,4 +1,4 @@
-<tool id="W4MClassFilter" name="W4MClassFilter" version="0.98.1">
+<tool id="W4MClassFilter" name="Sample_Subset" version="0.98.1">
   <description>Filter W4M data by sample class</description>
 
   <requirements>
@@ -193,15 +193,37 @@ Filter Workflow4Metabolomics data matrix files
 Description
 -----------
 
-Filter set of retention-corrected W4M files (dataMatrix, sampleMetadata, variableMetadata) by sample class
+Filter a set of retention-corrected W4M files (dataMatrix, sampleMetadata, variableMetadata) by sample-class
 
---------
-Comments
---------
+-----------------
+Workflow Position
+-----------------
 
-The *inclusive* parameter indicates:
-  - when 'filter-in', that only the sample-classes named should be included
-  - when 'filter-out', that all sample-classes should be included excepting the sample-classes named
+  - Upstream tool category: Preprocessing
+  - Downstream tool categories: Normalisation, Statistical Analysis, Quality Control
+
+----------
+Motivation
+----------
+
+GC-MS1 and LC-MS1 experiments seek to resolve chemicals as features that have distinct chromatographic behavior and (after ionization) mass-to-charge ratio. 
+Data for a sample are collected as MS intensities, each of which is associated with a position on a 2D plane with dimensions of m/z ratio and chromatographic retention time.
+Ideally, features would be sufficiently reproducible from sample-run to sample-run to identify features that are commmon among samples and those that differ. 
+However, the chromatographic retention time for a chemical can vary from one run to another.
+In the Workflow4Metabolomics (W4M, [Giacomoni *et al.*, 2014]) "flavor" of Galaxy, the XCMS [Smith *et al.*, 2006] preprocessing tools provide for "retention time correction" to align features among samples, but features may be better aligned if pooled samples and blanks are included.
+
+Multivariate statistical techniques may be used to discover clusters of similar samples, and sometimes it is desirable to apply clustering iteratively to smaller and smaller subsets of samples until observable separation of clusters is no longer significant.
+Once feature-alignment has been achieved among samples in GC-MS and LC-MS datasets, however, the presence of pools and blanks may confound identification and separation of clusters.
+Multivariate statistical algorithms also may be impacted by missing values or dimensions that have zero variance.
+
+The w4mclassfilter tool provides a way to choose subsets of samples for further analysis.
+The tool takes as input the data matrix, sample metadata, and variable metadata Galaxy datasets produced by W4M and produces the same trio of datasets with data only for the selected samples.
+The tool uses a "sample-class" column in the sample metadata as the basis for including or eliminating samples for further analysis.
+Class-values to be considered are provided by the user as a comma-separated list.
+The user also provides an indication whether the list specifies classes to be included in further analysis ("filter-in") or rather to be excluded from it ("filter-out").
+Next, missing and negative intensites for features of the remaining samples are imputed to zero.
+Finally, samples or features with zero variance are eliminated.
+
 
 -----------
 Input files
@@ -331,16 +353,21 @@ CHANGES IN VERSION 0.98.1
 
 NEW FEATURES
 
-First release - R package that implements filtering of W4M data matrix, variable metadata, and sample metadata by class of sample.
+First release - Wrap the w4mclassfilter R package that implements filtering of W4M data matrix, variable metadata, and sample metadata by class of sample.
 
 *dataMatrix* *is* modified by the tool, so it *does* appear as an output file
+*sampleMetadata* *is* modified by the tool, so it *does* appear as an output file
+*variableMetadata* *is* modified by the tool, so it *does* appear as an output file
 
 INTERNAL MODIFICATIONS
 
 none
+
     ]]>
   </help>
   <citations>
+    <citation type="doi">10.1021/ac051437y</citation>
+    <citation type="doi">10.1093/bioinformatics/btu813</citation>
   </citations>
 </tool>
 <!-- vim: noet sw=4 ts=4 :
