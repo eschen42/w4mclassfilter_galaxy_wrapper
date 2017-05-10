@@ -61,10 +61,6 @@ flgF <- function(tesC,
 ## log file
 ##---------
 
-information <- as.character(argVc["information"])
-
-#sink(information)
-
 my_print <- function(x, ...) { cat(c(x, ...))}
 
 my_print("\nStart of the '", modNamC, "' Galaxy module call: ",
