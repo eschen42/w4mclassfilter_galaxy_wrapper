@@ -4,3 +4,14 @@ homepage_url: https://github.com/HegemanLab/w4mclassfilter_galaxy_wrapper
 long_description: Filter Workflow4Metabolomics data matrix and metadata by sample-class
 name: w4mclassfilter
 owner: eschen42
+remote_repository_url: https://github.com/HegemanLab/w4mclassfilter_galaxy_wrapper/tree/master
+exclude:
+  - .gitignore
+  - .shed.yml
+  - test_log.txt
+  - run_test.sh
+  - run_serve.sh
+  - tool_test_output.json
+  - tool_test_output.html
+  - planemo_install_history.txt
+  - README.md
