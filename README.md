@@ -12,9 +12,13 @@
 
 Arthur Eschenlauer (University of Minnesota, esch0041@umn.edu)
 
-#### R package
+#### R package wrapped by this tool
 
 The *w4mclassfilter* package is available from the Hegeman lab github repository (https://github.com/HegemanLab/w4mclassfilter/releases).
+
+#### Tool in Galaxy toolshed
+
+The "w4mclassfilter" Galaxy tool, built from this repository, is in the toolshed at (https://toolshed.g2.bx.psu.edu/repository?repository_id=5f24951d82ab40fa)
 
 #### Tool updates
 
