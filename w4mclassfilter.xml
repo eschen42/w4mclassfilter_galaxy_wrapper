@@ -369,6 +369,6 @@ none
     <citation type="doi">10.1021/ac051437y</citation>
     <citation type="doi">10.1093/bioinformatics/btu813</citation>
   </citations>
-</tool>
-<!-- vim: noet sw=4 ts=4 :
--->
+  <!--
+     vim:noet:sw=4:ts=4
+--> </tool>
