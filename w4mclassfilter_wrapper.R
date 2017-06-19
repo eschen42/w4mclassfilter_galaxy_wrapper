@@ -83,15 +83,13 @@ variableMetadata_out <- as.character(argVc["variableMetadata_out"])
 # other parameters
 
 sampleclassNames <- as.character(argVc["sampleclassNames"])
-# if (sampleclassNames == "NONE_SPECIFIED") {
-#     sampleclassNames <- as.character(c())
-# 
-# } else {
-#     sampleclassNames <- strsplit(x = sampleclassNames, split = ",", fixed = TRUE)[[1]]
-# }
+wildcards <- as.logical(argVc["wildcards"])
 sampleclassNames <- strsplit(x = sampleclassNames, split = ",", fixed = TRUE)[[1]]
+if (wildcards) {
+  sampleclassNames <- gsub("[.]", "[.]", sampleclassNames)
+  sampleclassNames <- utils::glob2rx(sampleclassNames, trim.tail = FALSE)
+}
 inclusive <- as.logical(argVc["inclusive"])
-# print(sprintf("inclusive = '%s'", as.character(inclusive)))
 classnameColumn <- as.character(argVc["classnameColumn"])
 samplenameColumn <- as.character(argVc["samplenameColumn"])
 

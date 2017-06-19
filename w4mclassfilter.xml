@@ -1,10 +1,10 @@
-<tool id="w4mclassfilter" name="Sample_Subset" version="0.98.1">
+<tool id="w4mclassfilter" name="Sample_Subset" version="0.98.2">
   <description>Filter W4M data by sample class</description>
 
   <requirements>
     <requirement type="package" version="3.3.1">r-base</requirement>
     <requirement type="package" version="1.1_4">r-batch</requirement>
-    <requirement type="package" version="0.98.1">w4mclassfilter</requirement>
+    <requirement type="package" version="0.98.2">w4mclassfilter</requirement>
   </requirements>
 
   <stdio>
@@ -14,26 +14,33 @@
 
   <command detect_errors="aggressive"><![CDATA[
   Rscript $__tool_directory__/w4mclassfilter_wrapper.R
-  dataMatrix_in "$dataMatrix_in"
-  sampleMetadata_in "$sampleMetadata_in"
-  variableMetadata_in "$variableMetadata_in"
-  sampleclassNames "$sampleclassNames"
-  inclusive "$inclusive"
-  classnameColumn "$classnameColumn"
-  samplenameColumn "$samplenameColumn"
-  dataMatrix_out "$dataMatrix_out"
-  sampleMetadata_out "$sampleMetadata_out"
-  variableMetadata_out "$variableMetadata_out"
+  dataMatrix_in '$dataMatrix_in'
+  sampleMetadata_in '$sampleMetadata_in'
+  variableMetadata_in '$variableMetadata_in'
+  sampleclassNames '$sampleclassNames'
+  inclusive '$inclusive'
+  wildcards '$wildcards'
+  classnameColumn '$classnameColumn'
+  samplenameColumn '$samplenameColumn'
+  dataMatrix_out '$dataMatrix_out'
+  sampleMetadata_out '$sampleMetadata_out'
+  variableMetadata_out '$variableMetadata_out'
   ]]></command>
 
   <inputs>
     <param name="dataMatrix_in" label="Data matrix file" type="data" format="tabular" help="variable x sample, decimal: '.', missing: NA, mode: numerical, separator: tab" />
     <param name="sampleMetadata_in" label="Sample metadata file" type="data" format="tabular" help="sample x metadata columns, separator: tab" />
     <param name="variableMetadata_in" label="Variable metadata file" type="data" format="tabular" help="variable x metadata columns, separator: tab" />
-    <param name="sampleclassNames" label="Names of sample classes" type="text" value = "" help="comma-separated names of sample classes to filter in or out; defaults to no names" />
+    <param name="sampleclassNames" label="Names of sample classes" type="text" value = "" help="comma-separated names (or comma-less regular expressions to match names) of sample-classes to filter in or out; defaults to no names">
+      <sanitizer sanitize="False"/>
+    </param>
     <param name="inclusive" label="Include named classes" type="select" help="filter-in - include only the named sample classes; filter-out (the default) - exclude only the named sample classes">
       <option value="TRUE">filter-in</option>
       <option value="FALSE" selected="true">filter-out</option>
+    </param>
+    <param name="wildcards" label="Use wild-cards or regular-expressions" type="select" help="wild-cards (the default) - use '*' and '?' to match class names; regular-expressions - use comma-less regular expressions to match class names">
+      <option value="TRUE" selected="true">wild-cards</option>
+      <option value="FALSE">regular-expressions</option>
     </param>
     <param name="classnameColumn" label="Column that names the sample-class" type="text" value = "class" help="name of the column in sample metadata that has the values to be tested against the 'classes' input parameter - defaults to 'class'" />
     <param name="samplenameColumn" label="Column that names the sample" type="text" value = "sampleMetadata" help="name of the column in sample metadata that has the name of the sample - defaults to 'sampleMetadata'" />
@@ -156,6 +163,101 @@
         </assert_contents>
       </output>
     </test>
+    <test>
+      <param name="dataMatrix_in" value="input_nofilter_dataMatrix.tsv"/>
+      <param name="sampleMetadata_in" value="input_sampleMetadata.tsv"/>
+      <param name="variableMetadata_in" value="input_variableMetadata.tsv"/>
+      <param name="classnameColumn" value="gender"/>
+      <param name="sampleclassNames" value="M"/>
+      <param name="samplenameColumn" value="sampleMetadata"/>
+      <param name="inclusive" value="filter-in"/>
+      <output name="variableMetadata_out">
+        <assert_contents>
+          <has_text     text="HMDB03193" />
+          <not_has_text text="HMDB00822" />
+          <has_text     text="HMDB01101" />
+          <has_text     text="HMDB01101.1" />
+          <has_text     text="HMDB10348" />
+          <has_text     text="HMDB59717" />
+          <not_has_text text="HMDB13189" />
+          <has_text     text="HMDB00299" />
+          <has_text     text="HMDB00191" />
+          <has_text     text="HMDB00518" />
+          <has_text     text="HMDB00715" />
+          <has_text     text="HMDB01032" />
+          <has_text     text="HMDB00208" />
+          <has_text     text="HMDB04824" />
+          <has_text     text="HMDB00512" />
+          <has_text     text="HMDB00251" />
+        </assert_contents>
+      </output>
+    </test>
+    <test>
+      <param name="dataMatrix_in" value="input_dataMatrix.tsv"/>
+      <param name="sampleMetadata_in" value="input_sampleMetadata.tsv"/>
+      <param name="variableMetadata_in" value="input_variableMetadata.tsv"/>
+      <param name="classnameColumn" value="gender"/>
+      <param name="sampleclassNames" value="[Mm],[fF]"/>
+      <param name="samplenameColumn" value="sampleMetadata"/>
+      <param name="inclusive" value="filter-in"/>
+      <output name="sampleMetadata_out">
+        <assert_contents>
+          <has_text text="HU_028" />
+          <has_text text="HU_051" />
+          <has_text text="HU_060" />
+          <has_text text="HU_110" />
+          <has_text text="HU_149" />
+          <has_text text="HU_152" />
+          <has_text text="HU_175" />
+          <has_text text="HU_178" />
+          <has_text text="HU_185" />
+          <not_has_text text="HU_204" />
+          <has_text text="HU_208" />
+          <has_text text="HU_017" />
+          <has_text text="HU_034" />
+          <has_text text="HU_078" />
+          <has_text text="HU_091" />
+          <has_text text="HU_093" />
+          <has_text text="HU_099" />
+          <has_text text="HU_130" />
+          <has_text text="HU_134" />
+          <has_text text="HU_138" />
+        </assert_contents>
+      </output>
+    </test>
+    <test>
+      <param name="dataMatrix_in" value="input_dataMatrix.tsv"/>
+      <param name="sampleMetadata_in" value="input_sampleMetadata.tsv"/>
+      <param name="variableMetadata_in" value="input_variableMetadata.tsv"/>
+      <param name="classnameColumn" value=""/>
+      <param name="sampleclassNames" value="M"/>
+      <param name="samplenameColumn" value="sampleMetadata"/>
+      <param name="inclusive" value="filter-in"/>
+      <output name="sampleMetadata_out">
+        <assert_contents>
+          <has_text text="HU_028" />
+          <has_text text="HU_051" />
+          <has_text text="HU_060" />
+          <has_text text="HU_110" />
+          <has_text text="HU_149" />
+          <has_text text="HU_152" />
+          <has_text text="HU_175" />
+          <has_text text="HU_178" />
+          <has_text text="HU_185" />
+          <not_has_text text="HU_204" />
+          <has_text text="HU_208" />
+          <has_text text="HU_017" />
+          <has_text text="HU_034" />
+          <has_text text="HU_078" />
+          <has_text text="HU_091" />
+          <has_text text="HU_093" />
+          <has_text text="HU_099" />
+          <has_text text="HU_130" />
+          <has_text text="HU_134" />
+          <has_text text="HU_138" />
+        </assert_contents>
+      </output>
+    </test>
   </tests>
 
 
@@ -199,16 +301,16 @@ Filter a set of retention-corrected W4M files (dataMatrix, sampleMetadata, varia
 Workflow Position
 -----------------
 
-  - Upstream tool category: Preprocessing
-  - Downstream tool categories: Normalisation, Statistical Analysis, Quality Control
+- Upstream tool category: Preprocessing
+- Downstream tool categories: Normalisation, Statistical Analysis, Quality Control, Filter and Sort
 
 ----------
 Motivation
 ----------
 
-GC-MS1 and LC-MS1 experiments seek to resolve chemicals as features that have distinct chromatographic behavior and (after ionization) mass-to-charge ratio. 
+GC-MS1 and LC-MS1 experiments seek to resolve chemicals as features that have distinct chromatographic behavior and (after ionization) mass-to-charge ratio.
 Data for a sample are collected as MS intensities, each of which is associated with a position on a 2D plane with dimensions of m/z ratio and chromatographic retention time.
-Ideally, features would be sufficiently reproducible from sample-run to sample-run to identify features that are commmon among samples and those that differ. 
+Ideally, features would be sufficiently reproducible from sample-run to sample-run to identify features that are commmon among samples and those that differ.
 However, the chromatographic retention time for a chemical can vary from one run to another.
 In the Workflow4Metabolomics (W4M, [Giacomoni *et al.*, 2014]) "flavor" of Galaxy, the XCMS [Smith *et al.*, 2006] preprocessing tools provide for "retention time correction" to align features among samples, but features may be better aligned if pooled samples and blanks are included.
 
@@ -223,7 +325,6 @@ Class-values to be considered are provided by the user as a comma-separated list
 The user also provides an indication whether the list specifies classes to be included in further analysis ("filter-in") or rather to be excluded from it ("filter-out").
 Next, missing and negative intensites for features of the remaining samples are imputed to zero.
 Finally, samples or features with zero variance are eliminated.
-
 
 -----------
 Input files
@@ -260,17 +361,17 @@ Names of sample classes (default = no names)
 	| comma-separated names of sample classes to include or exclude
 	|
 
-Include named classes (default = filter-out)
-	| *filter-in* - include only the named sample classes
-	| *filter-out* - exclude only the named sample classes
+Include named classes (default = '``filter-out``')
+	| '``filter-in``' - include only the named sample classes
+	| '``filter-out``' - exclude only the named sample classes
 	|
 
 
-Column that names the sample-class (default = 'class')
-	| name of the column in sample metadata that has the values to be tested against the 'classes' input parameter
+Column that names the sample-class (default = '``class``')
+	| name of the column in sample metadata that has the values to be tested against the '``classes``' input parameter
 	|
 
-Column that names the sample (default = 'sampleMetadata')
+Column that names the sample (default = '``sampleMetadata``')
 	| name of the column in sample metadata that has the name of the sample
 	|
 
@@ -291,6 +392,63 @@ variableMetadata
 dataMatrix
 	| (tabular separated values) file identical to the **dataMatrix** file given as an input argument, excepting lacking rows for variables (xC-MS features) that have been filtered out (because of zero variance) and columns that have been filtered out (by the sample-class filter or because of zero variance)
 	|
+
+
+------------------------------------------------
+Wild card patterns to match class-names
+------------------------------------------------
+
+Beginning with v0.98.2, w4mclassfilter supports use of R regular expression patterns to select class-names.
+
+- use '``?``' to match a single character
+- use '``*``' to match zero or more characters
+- the entire pattern must match the sample name
+
+For example
+
+- '``??.samp*``' matches '``my.sample``' but not '``my.own.sample``'
+- '``*.sample``' matches '``my.sample``' and '``my.own.sample``'
+- '``*.sampl``' matches neither '``my.sample``' nor '``my.own.sample``'
+
+------------------------------------------------
+Regular expression patterns to match class-names
+------------------------------------------------
+
+Beginning with v0.98.2, w4mclassfilter supports use of R regular expression patterns to select class-names.
+
+R uses POSIX 1003.2 standard regular expressions, which allow precise pattern-matching and are exhaustively defined at:
+http://pubs.opengroup.org/onlinepubs/9699919799/basedefs/V1_chap09.html
+
+However, only a few basic building blocks of regular expressions need to be mastered for most cases:
+
+- '``^``' matches the beginning of a class-name
+- '``$``' matches the end of a class-name
+- '``.``' outside of square brackets matches a single character
+- '``*``' matches character specified immediately before zero or more times
+- square brackets specify a set of characters to be matched.
+
+Within square brackets
+
+- '``^``' as the first character specifies that the list of characters are those that should **not** be matched.
+- '``-``' is used to specify ranges of characters
+
+Caveat: The tool wrapper uses the comma ('``,``') to split a list of sample-class names, so **commas may not be used within regular expressions for this tool**
+
+First Example: Consider a field of class-names consisting of '``marq3,marq6,marq9,marq12,front3,front6,front9,front12``'
+
+- The regular expression '``^front[0-9][0-9]*$``' will match the same sample-classes as '``front3,front6,front9,front12``'
+- The regular expression '``^[a-z][a-z]3$``' will match the same sample-classes as '``front3,marq3``'
+- The regular expression '``^[a-z][a-z]12$``' will match the same sample-classes as '``front12,marq12``'
+- The regular expression '``^[a-z][a-z][0-9]$``' will match the same sample-classes as '``front3,front6,front9,marq3,marq6,marq9``'
+
+Second Example: Consider these regular expression patterns as possible matches to a sample-class name '``AB0123``':
+
+- '``^[A-Z][A-Z][0-9][0-9]*$``' - MATCHES '``**^AB0123$**``'
+- '``^[A-Z][A-Z]*[0-9][0-9]*$``' - MATCHES '``**^AB0123$**``'
+- '``^[A-Z][0-9]*``' - MATCHES  '``**^A** B0123$``' - first character is a letter, '``*``' can specify zero characters, and end of line did not need to be matched.
+- '``^[A-Z][A-Z][0-9]``' - MATCHES  '``**^AB0** 123$``' - first two characters are letters aind the third is a digit.
+- '``^[A-Z][A-Z]*[0-9][0-9]$``' - NO MATCH - the name does not end with the pattern '``[A-Z][0-9][0-9]$``', i.e., it ends with four digits, not two.
+- '``^[A-Z][0-9]*$``' - NO MATCH - the pattern specifies that second character and all those that follow, if present, must be digits.
 
 
 ---------------
@@ -347,6 +505,19 @@ Working example
 ----
 NEWS
 ----
+
+CHANGES IN VERSION 0.98.2
+=========================
+
+NEW FEATURES
+
+* Added support for R-flavored regular expression pattern-matching when selecting names of sample-classes.
+* Empty classes argument or zero-length class_column result in no samples filtered out.
+
+INTERNAL MODIFICATIONS
+
+* Support and tests for new features.
+
 
 CHANGES IN VERSION 0.98.1
 =========================
