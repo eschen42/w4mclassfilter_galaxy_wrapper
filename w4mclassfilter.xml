@@ -31,19 +31,19 @@
     <param name="dataMatrix_in" label="Data matrix file" type="data" format="tabular" help="variable x sample, decimal: '.', missing: NA, mode: numerical, separator: tab" />
     <param name="sampleMetadata_in" label="Sample metadata file" type="data" format="tabular" help="sample x metadata columns, separator: tab" />
     <param name="variableMetadata_in" label="Variable metadata file" type="data" format="tabular" help="variable x metadata columns, separator: tab" />
+    <param name="samplenameColumn" label="Column that names the sample" type="text" value = "sampleMetadata" help="name of the column in the sample metadata file that has the name of the sample - defaults to 'sampleMetadata'" />
+    <param name="classnameColumn" label="Column that names the sample-class" type="text" value = "class" help="name of the column in sample metadata that has the values to be tested against the 'classes' input parameter - defaults to 'class'" />
     <param name="sampleclassNames" label="Names of sample classes" type="text" value = "" help="comma-separated names (or comma-less regular expressions to match names) of sample-classes to filter in or out; defaults to no names">
       <sanitizer sanitize="False"/>
-    </param>
-    <param name="inclusive" label="Include named classes" type="select" help="filter-in - include only the named sample classes; filter-out (the default) - exclude only the named sample classes">
-      <option value="TRUE">filter-in</option>
-      <option value="FALSE" selected="true">filter-out</option>
     </param>
     <param name="wildcards" label="Use wild-cards or regular-expressions" type="select" help="wild-cards (the default) - use '*' and '?' to match class names; regular-expressions - use comma-less regular expressions to match class names">
       <option value="TRUE" selected="true">wild-cards</option>
       <option value="FALSE">regular-expressions</option>
     </param>
-    <param name="classnameColumn" label="Column that names the sample-class" type="text" value = "class" help="name of the column in sample metadata that has the values to be tested against the 'classes' input parameter - defaults to 'class'" />
-    <param name="samplenameColumn" label="Column that names the sample" type="text" value = "sampleMetadata" help="name of the column in sample metadata that has the name of the sample - defaults to 'sampleMetadata'" />
+    <param name="inclusive" label="Include named classes" type="select" help="filter-in - include only the named sample classes; filter-out (the default) - exclude only the named sample classes">
+      <option value="TRUE">filter-in</option>
+      <option value="FALSE" selected="true">filter-out</option>
+    </param>
   </inputs>
   <outputs>
     <data name="dataMatrix_out" label="${tool.name}_${dataMatrix_in.name}" format="tabular" ></data>
@@ -265,13 +265,11 @@
 	<help>
 		<![CDATA[
 
-.. class:: infomark
 
 **Author**	Arthur Eschenlauer (University of Minnesota, esch0041@umn.edu)
 
 --------------------------------------------------------------------------
 
-.. class:: infomark
 
 **R package**
 
@@ -279,7 +277,6 @@ The *w4mclassfilter* package is available from the Hegeman lab github repository
 
 -----------------------------------------------------------------------------------------------------------------------------------------
 
-.. class:: infomark
 
 **Tool updates**
 
@@ -357,8 +354,21 @@ Variable metadata file
 	| variable x metadata **variableMetadata** (tabular separated values) file of the numeric and/or character variable metadata, with . as decimal and NA for missing values
 	|
 
+Column that names the sample (default = '``sampleMetadata``')
+	| name of the column in sample metadata that has the name of the sample
+	|
+
+Column that names the sample-class (default = '``class``')
+	| name of the column in sample metadata that has the values to be tested against the '``classes``' input parameter
+	|
+
 Names of sample classes (default = no names)
 	| comma-separated names of sample classes to include or exclude
+	|
+
+Wild-cards (default = '``wild-cards``')
+	| '``wild-cards``' - use wild-cards to match names of sample classes (see 'Wild card patterns to match class-names' below)
+	| '``regular-expressions``' - exclude only the named sample classes (see 'Regular expression patterns to match class-names' below)
 	|
 
 Include named classes (default = '``filter-out``')
@@ -366,14 +376,6 @@ Include named classes (default = '``filter-out``')
 	| '``filter-out``' - exclude only the named sample classes
 	|
 
-
-Column that names the sample-class (default = '``class``')
-	| name of the column in sample metadata that has the values to be tested against the '``classes``' input parameter
-	|
-
-Column that names the sample (default = '``sampleMetadata``')
-	| name of the column in sample metadata that has the name of the sample
-	|
 
 
 ------------
@@ -394,9 +396,9 @@ dataMatrix
 	|
 
 
-------------------------------------------------
+---------------------------------------
 Wild card patterns to match class-names
-------------------------------------------------
+---------------------------------------
 
 Beginning with v0.98.2, w4mclassfilter supports use of R regular expression patterns to select class-names.
 
