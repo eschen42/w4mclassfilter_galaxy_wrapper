@@ -400,7 +400,7 @@ dataMatrix
 Wild card patterns to match class-names
 ---------------------------------------
 
-Beginning with v0.98.2, w4mclassfilter supports use of R regular expression patterns to select class-names.
+Beginning with v0.98.2, w4mclassfilter supports use of R "wild card" patterns to select class-names.
 
 - use '``?``' to match a single character
 - use '``*``' to match zero or more characters
@@ -416,7 +416,7 @@ For example
 Regular expression patterns to match class-names
 ------------------------------------------------
 
-Beginning with v0.98.2, w4mclassfilter supports use of R regular expression patterns to select class-names.
+Beginning with v0.98.2, w4mclassfilter supports use of R "regular expression" patterns to select class-names.
 
 R uses POSIX 1003.2 standard regular expressions, which allow precise pattern-matching and are exhaustively defined at:
 http://pubs.opengroup.org/onlinepubs/9699919799/basedefs/V1_chap09.html
