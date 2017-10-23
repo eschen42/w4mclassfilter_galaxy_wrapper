@@ -1,5 +1,7 @@
 [![DOI](https://zenodo.org/badge/90571457.svg)](https://zenodo.org/badge/latestdoi/90571457)
 
+[Repository 'w4mclassfilter' in Galaxy Toolshed](https://toolshed.g2.bx.psu.edu/repository?repository_id=5f24951d82ab40fa)
+
 # w4mclassfilter_galaxy_wrapper
 
 #### A Galaxy tool to filter Workflow4Metabolomics data matrix files
