@@ -1,3 +1,5 @@
+[![DOI](https://zenodo.org/badge/90571457.svg)](https://zenodo.org/badge/latestdoi/90571457)
+
 # w4mclassfilter_galaxy_wrapper
 
 #### A Galaxy tool to filter Workflow4Metabolomics data matrix files
