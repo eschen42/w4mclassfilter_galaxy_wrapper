@@ -1,10 +1,11 @@
-<tool id="w4mclassfilter" name="Sample_Subset" version="0.98.3">
+﻿<tool id="w4mclassfilter" name="Sample_Subset" version="0.98.6">
   <description>Filter W4M data by sample class</description>
 
   <requirements>
-    <requirement type="package" version="3.3.2">r-base</requirement>
+	  <!-- <requirement type="package" version="6.2">readline</requirement> -->
+    <requirement type="package" version="3.4.1">r-base</requirement>
     <requirement type="package" version="1.1_4">r-batch</requirement>
-    <requirement type="package" version="0.98.3">w4mclassfilter</requirement>
+    <requirement type="package" version="0.98.6">w4mclassfilter</requirement>
   </requirements>
 
   <stdio>
