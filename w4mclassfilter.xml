@@ -623,10 +623,13 @@ NEWS
 CHANGES IN VERSION 0.98.6
 =========================
 
-INTERNAL MODIFICATIONS
+NEW FEATURES
 
 * Added support for filtering out features whose attributes fall outside specified ranges.
   For more detail, see "Variable-range filters" above.
+  
+INTERNAL MODIFICATIONS
+
 * Now uses w4mclassfilter R package v0.98.6.
 * Now sorts sample names and feature names in output files because some statistical tools expect the same order in `dataMatrix` row and column names as in the corresponding metadata files.
 
