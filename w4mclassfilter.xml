@@ -1,4 +1,4 @@
-<tool id="w4mclassfilter" name="Sample_Subset" version="0.98.6">
+﻿<tool id="w4mclassfilter" name="Sample_Subset" version="0.98.6">
   <description>Filter W4M data by sample class</description>
 
   <requirements>
