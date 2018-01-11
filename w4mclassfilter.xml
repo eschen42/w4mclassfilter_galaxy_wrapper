@@ -1,4 +1,4 @@
-﻿<tool id="w4mclassfilter" name="Sample_Subset" version="0.98.6">
+<tool id="w4mclassfilter" name="Sample_Subset" version="0.98.6">
   <description>Filter W4M data by sample class</description>
 
   <requirements>
@@ -23,6 +23,7 @@
   wildcards '$wildcards'
   classnameColumn '$classnameColumn'
   samplenameColumn '$samplenameColumn'
+  variable_range_filter '$variable_range_filter'
   dataMatrix_out '$dataMatrix_out'
   sampleMetadata_out '$sampleMetadata_out'
   variableMetadata_out '$variableMetadata_out'
@@ -57,8 +58,8 @@
           <add value="&#125;" /> <!-- r-cube, right-curly-bracket -->
         </valid>
       </sanitizer>
-
     </param>
+
     <param name="wildcards" label="Use wild-cards or regular-expressions" type="select" help="wild-cards (the default) - use '*' and '?' to match class names; regular-expressions - use comma-less regular expressions to match class names">
       <option value="TRUE" selected="true">wild-cards</option>
       <option value="FALSE">regular-expressions</option>
@@ -67,6 +68,32 @@
       <option value="TRUE">filter-in</option>
       <option value="FALSE" selected="true">filter-out</option>
     </param>
+    
+    <param name="variable_range_filter" label="Variable range-filters" type="text" value = "" help="comma-separated filters specified as 'variableMetadataColumnName:min:max'; default is no filters.  (See help below.)">
+      <sanitizer>
+        <valid initial="string.letters">
+          <add preset="string.digits"/>
+          <add value="&#36;"  /> <!-- dollar, dollar-sign -->
+          <add value="&#40;"  /> <!-- left-paren -->
+          <add value="&#41;"  /> <!-- right-paren -->
+          <add value="&#42;"  /> <!-- splat, asterisk -->
+          <add value="&#43;"  /> <!-- plus -->
+          <add value="&#44;"  /> <!-- comma -->
+          <add value="&#46;"  /> <!-- dot, period -->
+          <add value="&#58;"  /> <!-- colon -->
+          <add value="&#59;"  /> <!-- semi, semicolon -->
+          <add value="&#63;"  /> <!-- what, question mark -->
+          <add value="&#91;"  /> <!-- l-squib, left-squre-bracket -->
+          <add value="&#92;"  /> <!-- whack, backslash -->
+          <add value="&#93;"  /> <!-- r-squib, right-squre-bracket -->
+          <add value="&#94;"  /> <!-- hat, caret -->
+          <add value="&#123;" /> <!-- l-cube, left-curly-bracket -->
+          <add value="&#124;" /> <!-- pipe -->
+          <add value="&#125;" /> <!-- r-cube, right-curly-bracket -->
+        </valid>
+      </sanitizer>
+    </param>
+    
   </inputs>
   <outputs>
     <data name="dataMatrix_out" label="${tool.name}_${dataMatrix_in.name}" format="tabular" ></data>
@@ -437,6 +464,10 @@ Include named classes (default = '``filter-out``')
 	| '``filter-out``' - exclude only the named sample classes
 	|
 
+Variable-range filters (default = no filters)
+	| comma-separated names of variable-range filters (see 'Variable-range filters' below)
+	|
+
 
 
 ------------
@@ -513,6 +544,26 @@ Second Example: Consider these regular expression patterns as possible matches t
 - '``^[A-Z][A-Z]*[0-9][0-9]$``' - NO MATCH - the name does not end with the pattern '``[A-Z][0-9][0-9]$``', i.e., it ends with four digits, not two.
 - '``^[A-Z][0-9]*$``' - NO MATCH - the pattern specifies that second character and all those that follow, if present, must be digits.
 
+----------------------
+Variable-range filters
+----------------------
+
+An array of range-specification strings may be supplied in the `variable_range_filter`
+argument.  If supplied, only features having numerical values in the specified column
+of `variableMetadata` that fall within the specified ranges will be retained
+in the output.  Each range is a string of three colon-separated values (e.g., "mz:200:800") in the
+following order:
+
+- the **name of a column of `variableMetadata`** which must have numerical data (e.g., "mz");
+- the **minimum allowed value** in that column for the feature to be retained (e.g., 200);
+- the **maximum allowed value** (e.g., 800).
+
+Note for the range specification strings: 
+
+- **If the "maximum" is less than the "minimum", then the range is exclusive**  (e.g., "mz:800:200" means retain only features whose mz is NOT in the range 200-800)
+- **If the name supplied in the first field is 'FEATMAX',**  then the string is defining the minimum (and possibly, though less useful, maximum) intensity for each feature in the dataMatrix.  For example, "FEATMAX:1e6:" would specify  that any feature would be excluded if no sample had an intensity for that feature greater than 1000000.
+
+  - Note, however, that when the "maximum" is greater than the "minimum" for the FEATMAX range specification, then the specification is ignored.
 
 ---------------
 Working example
@@ -568,6 +619,16 @@ Working example
 ----
 NEWS
 ----
+
+CHANGES IN VERSION 0.98.6
+=========================
+
+INTERNAL MODIFICATIONS
+
+* Added support for filtering out features whose attributes fall outside specified ranges.
+  For more detail, see "Variable-range filters" above.
+* Now uses w4mclassfilter R package v0.98.6.
+* Now sorts sample names and feature names in output files because some statistical tools expect the same order in `dataMatrix` row and column names as in the corresponding metadata files.
 
 CHANGES IN VERSION 0.98.3
 =========================

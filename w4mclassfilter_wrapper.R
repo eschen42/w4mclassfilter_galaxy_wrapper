@@ -82,8 +82,8 @@ variableMetadata_out <- as.character(argVc["variableMetadata_out"])
 
 # other parameters
 
-sampleclassNames <- as.character(argVc["sampleclassNames"])
 wildcards <- as.logical(argVc["wildcards"])
+sampleclassNames <- as.character(argVc["sampleclassNames"])
 sampleclassNames <- strsplit(x = sampleclassNames, split = ",", fixed = TRUE)[[1]]
 if (wildcards) {
   sampleclassNames <- gsub("[.]", "[.]", sampleclassNames)
@@ -93,22 +93,26 @@ inclusive <- as.logical(argVc["inclusive"])
 classnameColumn <- as.character(argVc["classnameColumn"])
 samplenameColumn <- as.character(argVc["samplenameColumn"])
 
+variable_range_filter <- as.character(argVc["variable_range_filter"])
+variable_range_filter <- strsplit(x = variable_range_filter, split = ",", fixed = TRUE)[[1]]
+
 ##------------------------------
 ## Computation
 ##------------------------------
 
 result <- w4m_filter_by_sample_class(
-  dataMatrix_in        = dataMatrix_in
-, sampleMetadata_in    = sampleMetadata_in
-, variableMetadata_in  = variableMetadata_in
-, dataMatrix_out       = dataMatrix_out
-, sampleMetadata_out   = sampleMetadata_out
-, variableMetadata_out = variableMetadata_out
-, classes              = sampleclassNames
-, include              = inclusive
-, class_column         = classnameColumn
-, samplename_column    = samplenameColumn
-, failure_action       = my_print
+  dataMatrix_in         = dataMatrix_in
+, sampleMetadata_in     = sampleMetadata_in
+, variableMetadata_in   = variableMetadata_in
+, dataMatrix_out        = dataMatrix_out
+, sampleMetadata_out    = sampleMetadata_out
+, variableMetadata_out  = variableMetadata_out
+, classes               = sampleclassNames
+, include               = inclusive
+, class_column          = classnameColumn
+, samplename_column     = samplenameColumn
+, variable_range_filter = variable_range_filter
+, failure_action        = my_print
 )
 
 my_print("\nResult of '", modNamC, "' Galaxy module call to 'w4mclassfilter::w4m_filter_by_sample_class' R function: ",
