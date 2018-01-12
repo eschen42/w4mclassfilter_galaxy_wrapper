@@ -1,0 +1,11 @@
+virtualenv .venv; . .venv/bin/activate
+pip install planemo
+mkdir src
+cd src
+git clone git@github.com:HegemanLab/w4mclassfilter_galaxy_wrapper.git
+cd w4mclassfilter_galaxy_wrapper/
+planemo conda_init
+planemo conda_install .
+./run_test.sh 
+./run_serve.sh 
+planemo shed_update -t testtoolshed .
