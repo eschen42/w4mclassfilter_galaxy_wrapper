@@ -1,11 +1,13 @@
-virtualenv .venv; . .venv/bin/activate
-pip install planemo
+virtualenv .venv     # initialize the virtual environment - do this once
+. .venv/bin/activate # activate the virtual environment - do this each time you start using planemo
+pip install planemo  # install planemo into the virtual environment - do this once
+# here is where I pull my project from github - depends on ~/.ssh
 mkdir src
 cd src
 git clone git@github.com:HegemanLab/w4mclassfilter_galaxy_wrapper.git
 cd w4mclassfilter_galaxy_wrapper/
-planemo conda_init
-planemo conda_install .
-./run_test.sh 
-./run_serve.sh 
-planemo shed_update -t testtoolshed .
+planemo conda_init .     # initialize conda for planemo - do this once
+planemo conda_install .  # install the package dependencies using conda resolution - do this each time the dependencies change
+./run_test.sh            # wrapper that mainly does:  planemo test --conda_dependency_resolution w4mclassfilter.xml
+./run_serve.sh           # wrapper that mainly does:  planemo serve --host 0.0.0.0 --conda_dependency_resolution .
+planemo shed_update -t testtoolshed .  # deploy to testtoolshed - depends on ~/.planemo.yml
