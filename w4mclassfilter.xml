@@ -658,17 +658,17 @@ INTERNAL MODIFICATIONS
 CHANGES IN VERSION 0.98.1
 =========================
 
-NEW FEATURES
-
 First release - Wrap the w4mclassfilter R package that implements filtering of W4M data matrix, variable metadata, and sample metadata by class of sample.
 
-*dataMatrix* *is* modified by the tool, so it *does* appear as an output file
-*sampleMetadata* *is* modified by the tool, so it *does* appear as an output file
-*variableMetadata* *is* modified by the tool, so it *does* appear as an output file
+NEW FEATURES
+
+* *dataMatrix* *is* modified by the tool, so it *does* appear as an output file
+* *sampleMetadata* *is* modified by the tool, so it *does* appear as an output file
+* *variableMetadata* *is* modified by the tool, so it *does* appear as an output file
 
 INTERNAL MODIFICATIONS
 
-none
+* none
 
   ]]></help>
   <citations>
