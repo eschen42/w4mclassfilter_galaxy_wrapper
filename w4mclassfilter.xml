@@ -23,7 +23,7 @@
   wildcards '$wildcards'
   classnameColumn '$classnameColumn'
   samplenameColumn '$samplenameColumn'
-  variable_range_filter '$variable_range_filter'
+  variable_range_filter '$variableRangeFilter'
   dataMatrix_out '$dataMatrix_out'
   sampleMetadata_out '$sampleMetadata_out'
   variableMetadata_out '$variableMetadata_out'
@@ -69,27 +69,13 @@
       <option value="FALSE" selected="true">filter-out</option>
     </param>
     
-    <param name="variable_range_filter" label="Variable range-filters" type="text" value = "" help="comma-separated filters specified as 'variableMetadataColumnName:min:max'; default is no filters.  (See help below.)">
+    <param name="variableRangeFilter" label="Variable range-filters" type="text" value = "" help="comma-separated filters, each specified as 'variableMetadataColumnName:min:max'; default is no filters.  (See help below.)">
       <sanitizer>
         <valid initial="string.letters">
           <add preset="string.digits"/>
-          <add value="&#36;"  /> <!-- dollar, dollar-sign -->
-          <add value="&#40;"  /> <!-- left-paren -->
-          <add value="&#41;"  /> <!-- right-paren -->
-          <add value="&#42;"  /> <!-- splat, asterisk -->
-          <add value="&#43;"  /> <!-- plus -->
           <add value="&#44;"  /> <!-- comma -->
-          <add value="&#46;"  /> <!-- dot, period -->
           <add value="&#58;"  /> <!-- colon -->
-          <add value="&#59;"  /> <!-- semi, semicolon -->
-          <add value="&#63;"  /> <!-- what, question mark -->
-          <add value="&#91;"  /> <!-- l-squib, left-squre-bracket -->
-          <add value="&#92;"  /> <!-- whack, backslash -->
-          <add value="&#93;"  /> <!-- r-squib, right-squre-bracket -->
-          <add value="&#94;"  /> <!-- hat, caret -->
-          <add value="&#123;" /> <!-- l-cube, left-curly-bracket -->
-          <add value="&#124;" /> <!-- pipe -->
-          <add value="&#125;" /> <!-- r-cube, right-curly-bracket -->
+          <add value="&#46;"  /> <!-- dot, period -->
         </valid>
       </sanitizer>
     </param>
@@ -102,6 +88,60 @@
   </outputs>
 
   <tests>
+    <test>
+      <param name="dataMatrix_in" value="input_dataMatrix.tsv"/>
+      <param name="sampleMetadata_in" value="input_sampleMetadata.tsv"/>
+      <param name="variableMetadata_in" value="input_variableMetadata.tsv"/>
+      <param name="classnameColumn" value="class"/>
+      <param name="sampleclassNames" value=""/>
+      <param name="wildcards" value="FALSE"/>
+      <param name="samplenameColumn" value="sampleMetadata"/>
+      <param name="inclusive" value="filter-out"/>
+      <param name="variableRangeFilter" value="FEATMAX:2e6:,mz:200:,rt::800"/>
+      <output name="sampleMetadata_out">
+        <assert_contents>
+          <has_text text="HU_028" />
+          <has_text text="HU_051" />
+          <has_text text="HU_060" />
+          <has_text text="HU_110" />
+          <has_text text="HU_149" />
+          <has_text text="HU_152" />
+          <has_text text="HU_175" />
+          <has_text text="HU_178" />
+          <has_text text="HU_185" />
+          <not_has_text text="HU_204" />
+          <has_text text="HU_208" />
+          <has_text text="HU_017" />
+          <has_text text="HU_034" />
+          <has_text text="HU_078" />
+          <has_text text="HU_091" />
+          <has_text text="HU_093" />
+          <has_text text="HU_099" />
+          <has_text text="HU_130" />
+          <has_text text="HU_134" />
+          <has_text text="HU_138" />
+        </assert_contents>
+      </output>
+      <output name="variableMetadata_out">
+        <assert_contents>
+          <has_text     text="HMDB00191" />
+          <has_text     text="HMDB00208" />
+          <not_has_text text="HMDB00251" />
+          <not_has_text text="HMDB00299" />
+          <not_has_text text="HMDB00512" />
+          <not_has_text text="HMDB00518" />
+          <not_has_text text="HMDB00715" />
+          <not_has_text text="HMDB00822" />
+          <has_text     text="HMDB01032" />
+          <has_text     text="HMDB01101.1" />
+          <not_has_text text="HMDB03193" />
+          <not_has_text text="HMDB04824" />
+          <not_has_text text="HMDB10348" />
+          <has_text     text="HMDB13189" />
+          <not_has_text text="HMDB59717" />
+        </assert_contents>
+      </output>
+    </test>
     <test>
       <param name="dataMatrix_in" value="input_dataMatrix.tsv"/>
       <param name="sampleMetadata_in" value="input_sampleMetadata.tsv"/>
@@ -548,7 +588,7 @@ Second Example: Consider these regular expression patterns as possible matches t
 Variable-range filters
 ----------------------
 
-An array of range-specification strings may be supplied in the `variable_range_filter`
+An array of range-specification strings may be supplied in the `variableRangeFilter`
 argument.  If supplied, only features having numerical values in the specified column
 of `variableMetadata` that fall within the specified ranges will be retained
 in the output.  Each range is a string of three colon-separated values (e.g., "mz:200:800") in the
@@ -577,15 +617,15 @@ WORKING EXAMPLES
 Input Files
 -----------
 
-+--------------------------------------------------------------------------------------------------------------+
-| Input File URL                                                                                               |
-+==============================================================================================================+
-| https://raw.githubusercontent.com/HegemanLab/w4mclassfilter/master/tests/testthat/input_dataMatrix.tsv       |
-+--------------------------------------------------------------------------------------------------------------+
-| https://raw.githubusercontent.com/HegemanLab/w4mclassfilter/master/tests/testthat/input_sampleMetadata.tsv   |
-+--------------------------------------------------------------------------------------------------------------+
-| https://raw.githubusercontent.com/HegemanLab/w4mclassfilter/master/tests/testthat/input_variableMetadata.tsv |
-+--------------------------------------------------------------------------------------------------------------+
++------------------------------------------------------------------------------------------------------------------------+
+| Input File URL                                                                                                         |
++========================================================================================================================+
+| https://raw.githubusercontent.com/HegemanLab/w4mclassfilter_galaxy_wrapper/master/test-data/input_dataMatrix.tsv       |
++------------------------------------------------------------------------------------------------------------------------+
+| https://raw.githubusercontent.com/HegemanLab/w4mclassfilter_galaxy_wrapper/master/test-data/input_sampleMetadata.tsv   |
++------------------------------------------------------------------------------------------------------------------------+
+| https://raw.githubusercontent.com/HegemanLab/w4mclassfilter_galaxy_wrapper/master/test-data/input_variableMetadata.tsv |
++------------------------------------------------------------------------------------------------------------------------+
 
 .. class:: infomark
 
@@ -611,15 +651,15 @@ This example retains only samples whose 'gender' attribute is 'M'.
 
 **Expected outputs**
 
-+-------------------+-----------------------------------------------------------------------------------------------------------------+
-| Expected Output   | Download from URL                                                                                               |
-+===================+=================================================================================================================+
-| Data matrix       | https://raw.githubusercontent.com/HegemanLab/w4mclassfilter/master/tests/testthat/expected_dataMatrix.tsv       |
-+-------------------+-----------------------------------------------------------------------------------------------------------------+
-| Sample metadata   | https://raw.githubusercontent.com/HegemanLab/w4mclassfilter/master/tests/testthat/expected_sampleMetadata.tsv   |
-+-------------------+-----------------------------------------------------------------------------------------------------------------+
-| Variable metadata | https://raw.githubusercontent.com/HegemanLab/w4mclassfilter/master/tests/testthat/expected_variableMetadata.tsv |
-+-------------------+-----------------------------------------------------------------------------------------------------------------+
++-------------------+---------------------------------------------------------------------------------------------------------------------------+
+| Expected Output   | Download from URL                                                                                                         |
++===================+===========================================================================================================================+
+| Data matrix       | https://raw.githubusercontent.com/HegemanLab/w4mclassfilter_galaxy_wrapper/master/test-data/expected_dataMatrix.tsv       |
++-------------------+---------------------------------------------------------------------------------------------------------------------------+
+| Sample metadata   | https://raw.githubusercontent.com/HegemanLab/w4mclassfilter_galaxy_wrapper/master/test-data/expected_sampleMetadata.tsv   |
++-------------------+---------------------------------------------------------------------------------------------------------------------------+
+| Variable metadata | https://raw.githubusercontent.com/HegemanLab/w4mclassfilter_galaxy_wrapper/master/test-data/expected_variableMetadata.tsv |
++-------------------+---------------------------------------------------------------------------------------------------------------------------+
 
 .. class:: infomark
 
@@ -627,7 +667,8 @@ This example retains only samples whose 'gender' attribute is 'M'.
 Running With Range-Filtering
 ----------------------------
 
-This example retains only samples whose 'gender' attribute is 'M'.
+This example retains only features whose mz is greater than 200, whose rt is less than 800, and whose maximum intensity across all samples is 2,000,000.
+This example retains all samples (except those having zero variance for all feature), although it would be possible to filter on samples as well.
 
 **Input parameters**
 
@@ -647,16 +688,15 @@ This example retains only samples whose 'gender' attribute is 'M'.
 
 **Expected outputs**
 
-+-------------------+--------------------------------------------------------------------------------------------------------------------+
-| Expected Output   | Download from URL                                                                                                  |
-+===================+====================================================================================================================+
-| Data matrix       | https://raw.githubusercontent.com/HegemanLab/w4mclassfilter/master/tests/testthat/rangefilter_dataMatrix.tsv       |
-+-------------------+--------------------------------------------------------------------------------------------------------------------+
-| Sample metadata   | https://raw.githubusercontent.com/HegemanLab/w4mclassfilter/master/tests/testthat/rangefilter_sampleMetadata.tsv   |
-+-------------------+--------------------------------------------------------------------------------------------------------------------+
-| Variable metadata | https://raw.githubusercontent.com/HegemanLab/w4mclassfilter/master/tests/testthat/rangefilter_variableMetadata.tsv |
-+-------------------+--------------------------------------------------------------------------------------------------------------------+
-
++-------------------+------------------------------------------------------------------------------------------------------------------------------+
+| Expected Output   | Download from URL                                                                                                            |
++===================+==============================================================================================================================+
+| Data matrix       | https://raw.githubusercontent.com/HegemanLab/w4mclassfilter_galaxy_wrapper/master/test-data/rangefilter_dataMatrix.tsv       |
++-------------------+------------------------------------------------------------------------------------------------------------------------------+
+| Sample metadata   | https://raw.githubusercontent.com/HegemanLab/w4mclassfilter_galaxy_wrapper/master/test-data/rangefilter_sampleMetadata.tsv   |
++-------------------+------------------------------------------------------------------------------------------------------------------------------+
+| Variable metadata | https://raw.githubusercontent.com/HegemanLab/w4mclassfilter_galaxy_wrapper/master/test-data/rangefilter_variableMetadata.tsv |
++-------------------+------------------------------------------------------------------------------------------------------------------------------+
 
 -----------------------------------------------------------------------------
 
