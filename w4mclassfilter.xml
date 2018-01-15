@@ -565,27 +565,37 @@ Note for the range specification strings:
 
   - Note, however, that when the "maximum" is greater than the "minimum" for the FEATMAX range specification, then the specification is ignored.
 
----------------
-Working example
----------------
+-----------------------------------------------------------------------------
+
+----------------
+WORKING EXAMPLES
+----------------
 
 .. class:: infomark
 
-**Input files**
+-----------
+Input Files
+-----------
 
-+-------------------+--------------------------------------------------------------------------------------------------------------+
-| Input File        | Download from URL                                                                                            |
-+===================+==============================================================================================================+
-| Data matrix       | https://raw.githubusercontent.com/HegemanLab/w4mclassfilter/master/tests/testthat/input_dataMatrix.tsv       |
-+-------------------+--------------------------------------------------------------------------------------------------------------+
-| Sample metadata   | https://raw.githubusercontent.com/HegemanLab/w4mclassfilter/master/tests/testthat/input_sampleMetadata.tsv   |
-+-------------------+--------------------------------------------------------------------------------------------------------------+
-| Variable metadata | https://raw.githubusercontent.com/HegemanLab/w4mclassfilter/master/tests/testthat/input_variableMetadata.tsv |
-+-------------------+--------------------------------------------------------------------------------------------------------------+
++--------------------------------------------------------------------------------------------------------------+
+| Input File URL                                                                                               |
++==============================================================================================================+
+| https://raw.githubusercontent.com/HegemanLab/w4mclassfilter/master/tests/testthat/input_dataMatrix.tsv       |
++--------------------------------------------------------------------------------------------------------------+
+| https://raw.githubusercontent.com/HegemanLab/w4mclassfilter/master/tests/testthat/input_sampleMetadata.tsv   |
++--------------------------------------------------------------------------------------------------------------+
+| https://raw.githubusercontent.com/HegemanLab/w4mclassfilter/master/tests/testthat/input_variableMetadata.tsv |
++--------------------------------------------------------------------------------------------------------------+
 
 .. class:: infomark
 
-**Other input parameters**
+-------------------------------
+Running Without Range-Filtering
+-------------------------------
+
+This example retains only samples whose 'gender' attribute is 'M'.
+
+**Input parameters**
 
 +------------------------------------+-----------------+
 | Input Parameter                    | Value           |
@@ -599,8 +609,6 @@ Working example
 | Column that names the sample       | sampleMetadata  |
 +------------------------------------+-----------------+
 
-.. class:: infomark
-
 **Expected outputs**
 
 +-------------------+-----------------------------------------------------------------------------------------------------------------+
@@ -613,6 +621,42 @@ Working example
 | Variable metadata | https://raw.githubusercontent.com/HegemanLab/w4mclassfilter/master/tests/testthat/expected_variableMetadata.tsv |
 +-------------------+-----------------------------------------------------------------------------------------------------------------+
 
+.. class:: infomark
+
+----------------------------
+Running With Range-Filtering
+----------------------------
+
+This example retains only samples whose 'gender' attribute is 'M'.
+
+**Input parameters**
+
++------------------------------------+-------------------------------+
+| Input Parameter                    | Value                         |
++====================================+===============================+
+| Names of sample classes            | (Leave this field empty.)     |
++------------------------------------+-------------------------------+
+| Include named classes              | filter-out                    |
++------------------------------------+-------------------------------+
+| Column that names the sample-class | class                         |
++------------------------------------+-------------------------------+
+| Column that names the sample       | sampleMetadata                |
++------------------------------------+-------------------------------+
+| Variable range-filters             | FEATMAX:2e6:,mz:200:,rt::800  |
++------------------------------------+-------------------------------+
+
+**Expected outputs**
+
++-------------------+--------------------------------------------------------------------------------------------------------------------+
+| Expected Output   | Download from URL                                                                                                  |
++===================+====================================================================================================================+
+| Data matrix       | https://raw.githubusercontent.com/HegemanLab/w4mclassfilter/master/tests/testthat/rangefilter_dataMatrix.tsv       |
++-------------------+--------------------------------------------------------------------------------------------------------------------+
+| Sample metadata   | https://raw.githubusercontent.com/HegemanLab/w4mclassfilter/master/tests/testthat/rangefilter_sampleMetadata.tsv   |
++-------------------+--------------------------------------------------------------------------------------------------------------------+
+| Variable metadata | https://raw.githubusercontent.com/HegemanLab/w4mclassfilter/master/tests/testthat/rangefilter_variableMetadata.tsv |
++-------------------+--------------------------------------------------------------------------------------------------------------------+
+
 
 -----------------------------------------------------------------------------
 
@@ -620,55 +664,54 @@ Working example
 NEWS
 ----
 
-CHANGES IN VERSION 0.98.6
+Changes in version 0.98.6
 =========================
 
-NEW FEATURES
+New features
 
 * Added support for filtering out features whose attributes fall outside specified ranges.
   For more detail, see "Variable-range filters" above.
   
-INTERNAL MODIFICATIONS
+Internal modifications
 
 * Now uses w4mclassfilter R package v0.98.6.
 * Now sorts sample names and feature names in output files because some statistical tools expect the same order in `dataMatrix` row and column names as in the corresponding metadata files.
 
-CHANGES IN VERSION 0.98.3
+Changes in version 0.98.3
 =========================
 
-INTERNAL MODIFICATIONS
+Internal modifications
 
 * Improved input handling.
 * Now uses w4mclassfilter R package v0.98.3, although that version has no functional implications for this tool.
 * Improved reference-list.
 
-CHANGES IN VERSION 0.98.2
+Changes in version 0.98.2
 =========================
 
-NEW FEATURES
+New features
 
 * Added support for R-flavored regular expression pattern-matching when selecting names of sample-classes.
 * Empty classes argument or zero-length class_column result in no samples filtered out.
 
-INTERNAL MODIFICATIONS
+Internal modifications
 
 * Support and tests for new features.
 
-
-CHANGES IN VERSION 0.98.1
+Changes in version 0.98.1
 =========================
 
 First release - Wrap the w4mclassfilter R package that implements filtering of W4M data matrix, variable metadata, and sample metadata by class of sample.
 
-NEW FEATURES
+New features
 
 * *dataMatrix* *is* modified by the tool, so it *does* appear as an output file
 * *sampleMetadata* *is* modified by the tool, so it *does* appear as an output file
 * *variableMetadata* *is* modified by the tool, so it *does* appear as an output file
 
-INTERNAL MODIFICATIONS
+Internal modifications
 
-* none
+* N/A
 
   ]]></help>
   <citations>
