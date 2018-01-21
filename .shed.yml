@@ -12,6 +12,9 @@ include:
   - test-data/expected_dataMatrix.tsv
   - test-data/expected_sampleMetadata.tsv
   - test-data/expected_variableMetadata.tsv
+  - test-data/rangefilter_dataMatrix.tsv
+  - test-data/rangefilter_sampleMetadata.tsv
+  - test-data/rangefilter_variableMetadata.tsv
   - test-data/input_dataMatrix.tsv
   - test-data/input_nofilter_dataMatrix.tsv
   - test-data/input_sampleMetadata.tsv
