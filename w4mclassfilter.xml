@@ -1,11 +1,12 @@
-﻿<tool id="w4mclassfilter" name="Sample_Subset" version="0.98.6">
+﻿<tool id="w4mclassfilter" name="Sample_Subset" version="0.98.7">
+  <!-- this file is utf-8, not ASCII, because it contains the character é -->
   <description>Filter W4M data by sample class</description>
 
   <requirements>
-	  <!-- <requirement type="package" version="6.2">readline</requirement> -->
+    <!-- <requirement type="package" version="6.2">readline</requirement> -->
     <requirement type="package" version="3.4.1">r-base</requirement>
     <requirement type="package" version="1.1_4">r-batch</requirement>
-    <requirement type="package" version="0.98.6">w4mclassfilter</requirement>
+    <requirement type="package" version="0.98.7">w4mclassfilter</requirement>
   </requirements>
 
   <stdio>
@@ -620,6 +621,14 @@ Working example
 NEWS
 ----
 
+CHANGES IN VERSION 0.98.7
+=========================
+
+NEW FEATURES
+
+* First column of sample metadata is by default renamed to "sampleMetadata" unless
+  argument 'name_smplmetadata_col1' is supplied and set to FALSE.
+
 CHANGES IN VERSION 0.98.6
 =========================
 
@@ -682,5 +691,5 @@ INTERNAL MODIFICATIONS
     <citation type="doi">10.1021/acs.jproteome.5b00354</citation>
   </citations>
   <!--
-     vim:noet:sw=4:ts=4
+     vim:noet:sw=2:ts=2
 --> </tool>
