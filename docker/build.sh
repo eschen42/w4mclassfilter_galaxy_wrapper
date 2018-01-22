@@ -1,2 +1,2 @@
 #!/bin/bash
-docker build -t eschen42/devplanpip .
+docker build -t eschen42/devplan .
