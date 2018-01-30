@@ -122,6 +122,33 @@ Finally, samples or features with zero variance are eliminated.
 
 ## NEWS
 
+### CHANGES IN VERSION 0.98.7
+
+#### NEW FEATURES
+* First column of output variableMetadata (that has feature names) now is always named `variableMetadata`
+* First column of output sampleMetadata now (that has sample names) is always named `sampleMetadata`
+
+#### INTERNAL MODIFICATIONS
+
+* Now uses w4mclassfilter R package v0.98.7.
+
+### CHANGES IN VERSION 0.98.6
+
+#### NEW FEATURES
+
+* Added support for filtering out features whose attributes fall outside specified ranges. For more detail, see "Variable-range filters" above.
+#### INTERNAL MODIFICATIONS
+
+* Now uses w4mclassfilter R package v0.98.6.
+* Now sorts sample names and feature names in output files because some statistical tools expect the same order in dataMatrix row and column names as in the corresponding metadata files.
+
+### CHANGES IN VERSION 0.98.3
+#### NEW FEATURES
+* Improved reference-list.
+#### INTERNAL MODIFICATIONS
+* Improved input handling.
+* Now uses w4mclassfilter R package v0.98.3, although that version has no functional implications for this tool.
+
 ### CHANGES IN VERSION 0.98.1
 #### NEW FEATURES
 * First release - Wrap the w4mclassfilter R package that implements filtering of W4M data matrix, variable metadata, and sample metadata by class of sample.
