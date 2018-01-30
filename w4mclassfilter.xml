@@ -708,10 +708,14 @@ NEWS
 CHANGES IN VERSION 0.98.7
 =========================
 
-NEW FEATURES
+New features
 
-* First column of sample metadata is by default renamed to "sampleMetadata" unless
-  argument 'name_smplmetadata_col1' is supplied and set to FALSE.
+* First column of output variableMetadata (that has feature names) now is always named 'variableMetadata'.
+* First column of output sampleMetadata now (that has sample names) is always named 'sampleMetadata'.
+
+Internal modifications
+
+* Now uses w4mclassfilter R package v0.98.7.
 
 CHANGES IN VERSION 0.98.6
 =========================
