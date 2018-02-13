@@ -28,34 +28,36 @@ The "w4mclassfilter" Galaxy tool, built from this repository, is in the toolshed
 
 See the **NEWS** section at the bottom of this page
 
+## Motivation
+
+GC-MS and LC-MS experiments seek to resolve chemicals as features that have distinct chromatographic retention time ("rt") and mass-to-charge ratio ("m/z" or "mz"). Data for a sample are collected as MS intensities, each of which is associated with a position on a 2D plane with dimensions of rt and m/z. Ideally, features would be sufficiently reproducible among sample-runs to distinguish features that are commmon among samples from those that differ. However, the chromatographic retention time for a chemical can vary from one run to another.
+
+Workflow4Metabolomics (W4m, [Giacomoni et al., 2014, Guitton et al. 2017]) is a "flavor" of Galaxy that uses the XCMS preprocessing tools for "retention time correction" to align features among samples; features may be better aligned if pooled samples and blanks are included.
+
+Multivariate statistical techniques may be used to discover clusters of similar samples (Thévenot et al., 2015). However, once retention-time alignment of features has been achieved among samples in GC-MS and LC-MS datasets, the presence of pools and blanks may confound identification and separation of clusters. Multivariate statistical algorithms also may be impacted by missing values or dimensions that have zero variance.
+
 ## Description
 
-Filter a set of retention-corrected W4M files (dataMatrix, sampleMetadata, variableMetadata) by sample-class
+The W4m Data Subset tool selects subsets of samples, features, or data values for further analysis. The tool takes as input the data matrix, sample metadata, and variable metadata datasets produced by W4m's XCMS [Smith et al., 2006] tools and produces the same trio of datasets with only the selected data, samples, or features.
+
+This tool performs several operations either to reduce the number samples or features to be analyzed or to address several data issues that may impede downstream statistical analysis:
+
+  - Samples that are missing from either sampleMetadata or dataMatrix are eliminated.
+  - Samples may also be eliminated by a “sample class” column in sampleMetadata.
+  - Features that are missing from either variableMetadata or dataMatrix are eliminated.
+  - Features may be eliminated by specifying minimum or maximum value (or both) allowable in columns of variableMetadata.
+  - Features may be eliminated by specifying minimum or maximum intensity (or both) allowable in columns of dataMatrix for at least one sample for each feature (“range of row-maximum for each feature”).
+  - Missing values in dataMatrix are imputed to zero.
+  - Features and samples that have zero variance are eliminated.
+  - Samples and features are sorted alphabetically in rows and columns of variableMetadata, sampleMetadata, and dataMatrix.
+  - By default, the names of the first columns of variableMetadata and sampleMetadata are set respectively to "variableMetadata" and "sampleMetadata".
+
+The W4m Data Subset tool may be applied several times sequentially; for example, this may be useful for clustering progressively smaller subsets of samples until observable separation of clusters is no longer significant.
 
 ## Galaxy Workflow Position
 
   - Upstream tool category: Preprocessing
   - Downstream tool categories: Normalisation, Statistical Analysis, Quality Control
-
-## Motivation
-
-GC-MS1 and LC-MS1 experiments seek to resolve chemicals as features that have distinct chromatographic behavior and (after ionization) mass-to-charge ratio. 
-Data for a sample are collected as MS intensities, each of which is associated with a position on a 2D plane with dimensions of m/z ratio and chromatographic retention time.
-Ideally, features would be sufficiently reproducible from sample-run to sample-run to identify features that are commmon among samples and those that differ. 
-However, the chromatographic retention time for a chemical can vary from one run to another.
-In the Workflow4Metabolomics (W4M, [Giacomoni *et al.*, 2014]) "flavor" of Galaxy, the XCMS [Smith *et al.*, 2006] preprocessing tools provide for "retention time correction" to align features among samples, but features may be better aligned if pooled samples and blanks are included.
-
-Multivariate statistical techniques may be used to discover clusters of similar samples, and sometimes it is desirable to apply clustering iteratively to smaller and smaller subsets of samples until observable separation of clusters is no longer significant.
-Once feature-alignment has been achieved among samples in GC-MS and LC-MS datasets, however, the presence of pools and blanks may confound identification and separation of clusters.
-Multivariate statistical algorithms also may be impacted by missing values or dimensions that have zero variance.
-
-The w4mclassfilter tool provides a way to choose subsets of samples for further analysis.
-The tool takes as input the data matrix, sample metadata, and variable metadata Galaxy datasets produced by W4M and produces the same trio of datasets with data only for the selected samples.
-The tool uses a "sample-class" column in the sample metadata as the basis for including or eliminating samples for further analysis.
-Class-values to be considered are provided by the user as a comma-separated list.
-The user also provides an indication whether the list specifies classes to be included in further analysis ("filter-in") or rather to be excluded from it ("filter-out").
-Next, missing and negative intensites for features of the remaining samples are imputed to zero.
-Finally, samples or features with zero variance are eliminated.
 
 ## Input files
 
@@ -160,6 +162,10 @@ Finally, samples or features with zero variance are eliminated.
 
 ## Citations
 
+Giacomoni, F. and Le Corguille, G. and Monsoor, M. and Landi, M. and Pericard, P. and Petera, M. and Duperier, C. and Tremblay-Franco, M. and Martin, J.-F. and Jacob, D. and et al. (2014). Workflow4Metabolomics: a collaborative research infrastructure for computational metabolomics. In Bioinformatics, 31 (9), pp. 1493–1495. [doi:10.1093/bioinformatics/btu813](http://dx.doi.org/10.1093/bioinformatics/btu813)
+
+Guitton, Yann and Tremblay-Franco, Marie and Le Corguillé, Gildas and Martin, Jean-François and Pétéra, Mélanie and Roger-Mele, Pierrick and Delabrière, Alexis and Goulitquer, Sophie and Monsoor, Misharl and Duperier, Christophe and et al. (2017). Create, run, share, publish, and reference your LC–MS, FIA–MS, GC–MS, and NMR data analysis workflows with the Workflow4Metabolomics 3.0 Galaxy online infrastructure for metabolomics. In The International Journal of Biochemistry & Cell Biology, [doi:10.1016/j.biocel.2017.07.002](http://dx.doi.org/10.1016/j.biocel.2017.07.002)
+
 Smith, Colin A. and Want, Elizabeth J. and O’Maille, Grace and Abagyan, Ruben and Siuzdak, Gary (2006). XCMS: Processing Mass Spectrometry Data for Metabolite Profiling Using Nonlinear Peak Alignment, Matching, and Identification. In Analytical Chemistry, 78 (3), pp. 779–787. [doi:10.1021/ac051437y](http://dx.doi.org/10.1021/ac051437y)
 
-Giacomoni, F. and Le Corguille, G. and Monsoor, M. and Landi, M. and Pericard, P. and Petera, M. and Duperier, C. and Tremblay-Franco, M. and Martin, J.-F. and Jacob, D. and et al. (2014). Workflow4Metabolomics: a collaborative research infrastructure for computational metabolomics. In Bioinformatics, 31 (9), pp. 1493–1495. [doi:10.1093/bioinformatics/btu813](http://dx.doi.org/10.1093/bioinformatics/btu813)
+Thévenot, Etienne A. and Roux, Aurélie and Xu, Ying and Ezan, Eric and Junot, Christophe (2015). Analysis of the Human Adult Urinary Metabolome Variations with Age, Body Mass Index, and Gender by Implementing a Comprehensive Workflow for Univariate and OPLS Statistical Analyses. In Journal of Proteome Research, 14 (8), pp. 3322–3335. [doi:10.1021/acs.jproteome.5b00354](http://dx.doi.org/10.1021/acs.jproteome.5b00354)
