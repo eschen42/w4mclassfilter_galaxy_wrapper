@@ -1,6 +1,6 @@
-﻿<tool id="w4mclassfilter" name="Sample_Subset" version="0.98.7">
+﻿<tool id="w4mclassfilter" name="W4m_Data_Subset" version="0.98.8">
   <!-- this file is utf-8, not ASCII, because it contains the character é -->
-  <description>Filter W4M data by sample class</description>
+  <description>Filter W4m data by values or metadata</description>
 
   <requirements>
     <!-- <requirement type="package" version="6.2">readline</requirement> -->
@@ -402,7 +402,7 @@
 
 **R package**
 
-The *w4mclassfilter* package is available from the Hegeman lab github repository (https://github.com/HegemanLab/w4mclassfilter/releases).
+The *w4mclassfilter* package (which is used by the W4m Data Subset tool) is available from the Hegeman lab github repository (https://github.com/HegemanLab/w4mclassfilter/releases).
 
 -----------------------------------------------------------------------------------------------------------------------------------------
 
@@ -413,15 +413,48 @@ See the **NEWS** section at the bottom of this page
 
 ---------------------------------------------------
 
-==============================================
-Filter Workflow4Metabolomics data matrix files
-==============================================
+===========================================================
+"W4m Data Subset" - Filter Workflow4Metabolomics data files
+===========================================================
+
+Note: Earlier versions of this tool were shown in Galaxy with the name "Sample Subset".
+
+----------
+Motivation
+----------
+
+GC-MS and LC-MS experiments seek to resolve chemicals as features that have distinct chromatographic retention time ("rt") and mass-to-charge ratio ("m/z" or "mz").
+Data for a sample are collected as MS intensities, each of which is associated with a position on a 2D plane with dimensions of rt and m/z.
+Ideally, features would be sufficiently reproducible among sample-runs to distinguish features that are commmon among samples from those that differ.
+However, the chromatographic retention time for a chemical can vary from one run to another.
+
+Workflow4Metabolomics (W4m, [Giacomoni *et al.*, 2014, Guitton *et al.* 2017]) is a "flavor" of Galaxy that uses the XCMS preprocessing tools for "retention time correction" to align features among samples; features may be better aligned if pooled samples and blanks are included.
+
+Multivariate statistical techniques may be used to discover clusters of similar samples (Thévenot *et al.*, 2015).
+However, once retention-time alignment of features has been achieved among samples in GC-MS and LC-MS datasets, the presence of pools and blanks may confound identification and separation of clusters.
+Multivariate statistical algorithms also may be impacted by missing values or dimensions that have zero variance.
 
 -----------
 Description
 -----------
 
-Filter a set of retention-corrected W4M files (dataMatrix, sampleMetadata, variableMetadata) by sample-class
+The **W4m Data Subset** tool **selects subsets of samples, features, or data values** for further analysis.
+The tool takes as input the data matrix, sample metadata, and variable metadata datasets produced by W4m's XCMS [Smith *et al.*, 2006] tools and produces the same trio of datasets with only the selected data, samples, or features.
+
+This tool performs several operations either to reduce the number samples or features to be analyzed or to address several data issues that may impede downstream statistical analysis:
+
+- Samples that are missing from either sampleMetadata or dataMatrix are eliminated.
+- Samples may also be eliminated by a “sample class” column in sampleMetadata.
+- Features that are missing from either variableMetadata or dataMatrix are eliminated.
+- Features may be eliminated by specifying minimum or maximum value (or both) allowable in columns of variableMetadata.
+- Features may be eliminated by specifying minimum or maximum intensity (or both) allowable in columns of dataMatrix for at least one sample for each feature (“range of row-maximum for each feature”).
+- Missing values in dataMatrix are imputed to zero.
+- Features and samples that have zero variance are eliminated.
+- Samples and features are sorted alphabetically in rows and columns of variableMetadata, sampleMetadata, and dataMatrix.
+- By default, the names of the first columns of variableMetadata and sampleMetadata are set respectively to "variableMetadata" and "sampleMetadata".
+
+
+The W4m Data Subset tool may be applied several times sequentially; for example, this may be useful for clustering progressively smaller subsets of samples until observable separation of clusters is no longer significant.
 
 -----------------
 Workflow Position
@@ -429,28 +462,6 @@ Workflow Position
 
 - Upstream tool category: Preprocessing
 - Downstream tool categories: Normalisation, Statistical Analysis, Quality Control, Filter and Sort
-
-----------
-Motivation
-----------
-
-GC-MS1 and LC-MS1 experiments seek to resolve chemicals as features that have distinct chromatographic behavior and (after ionization) mass-to-charge ratio.
-Data for a sample are collected as MS intensities, each of which is associated with a position on a 2D plane with dimensions of m/z ratio and chromatographic retention time.
-Ideally, features would be sufficiently reproducible from sample-run to sample-run to identify features that are commmon among samples and those that differ.
-However, the chromatographic retention time for a chemical can vary from one run to another.
-In the Workflow4Metabolomics (W4M, [Giacomoni *et al.*, 2014, Guitton *et al.* 2017]) "flavor" of Galaxy, the XCMS [Smith *et al.*, 2006] preprocessing tools provide for "retention time correction" to align features among samples, but features may be better aligned if pooled samples and blanks are included.
-
-Multivariate statistical techniques may be used to discover clusters of similar samples, and sometimes it is desirable to apply clustering iteratively to smaller and smaller subsets of samples until observable separation of clusters is no longer significant.
-Once feature-alignment has been achieved among samples in GC-MS and LC-MS datasets, however, the presence of pools and blanks may confound identification and separation of clusters.
-Multivariate statistical algorithms also may be impacted by missing values or dimensions that have zero variance (Thévenot *et al.*, 2015).
-
-The w4mclassfilter tool provides a way to choose subsets of samples for further analysis.
-The tool takes as input the data matrix, sample metadata, and variable metadata Galaxy datasets produced by W4M and produces the same trio of datasets with data only for the selected samples.
-The tool uses a "sample-class" column in the sample metadata as the basis for including or eliminating samples for further analysis.
-Class-values to be considered are provided by the user as a comma-separated list.
-The user also provides an indication whether the list specifies classes to be included in further analysis ("filter-in") or rather to be excluded from it ("filter-out").
-Next, missing and negative intensites for features of the remaining samples are imputed to zero.
-Finally, samples or features with zero variance are eliminated.
 
 -----------
 Input files
@@ -533,7 +544,7 @@ dataMatrix
 Wild card patterns to match class-names
 ---------------------------------------
 
-Beginning with v0.98.2, w4mclassfilter supports use of R "wild card" patterns to select class-names.
+Beginning with v0.98.2, W4m Data Subset supports use of R "wild card" patterns to select class-names.
 
 - use '``?``' to match a single character
 - use '``*``' to match zero or more characters
@@ -549,7 +560,7 @@ For example
 Regular expression patterns to match class-names
 ------------------------------------------------
 
-Beginning with v0.98.2, w4mclassfilter supports use of R "regular expression" patterns to select class-names.
+Beginning with v0.98.2, W4m Data Subset supports use of R "regular expression" patterns to select class-names.
 
 R uses POSIX 1003.2 standard regular expressions, which allow precise pattern-matching and are exhaustively defined at:
 http://pubs.opengroup.org/onlinepubs/9699919799/basedefs/V1_chap09.html
@@ -705,6 +716,19 @@ This example retains all samples (except those having zero variance for all feat
 NEWS
 ----
 
+CHANGES IN VERSION 0.98.8
+=========================
+
+New features
+
+* The tool now appears in Galaxy with a new, more representative name: "W4m Data Subset"
+* Some documentation was updated or clarified.
+* There are no functional changes.
+
+Internal modifications
+
+* None
+
 CHANGES IN VERSION 0.98.7
 =========================
 
@@ -754,7 +778,7 @@ Internal modifications
 Changes in version 0.98.1
 =========================
 
-First release - Wrap the w4mclassfilter R package that implements filtering of W4M data matrix, variable metadata, and sample metadata by class of sample.
+First release - Wrap the w4mclassfilter R package that implements filtering of W4m data matrix, variable metadata, and sample metadata by class of sample.
 
 New features
 
@@ -768,9 +792,9 @@ Internal modifications
 
   ]]></help>
   <citations>
-    <!-- Giacomoni_2014 W4M 2.5 -->
+    <!-- Giacomoni_2014 W4m 2.5 -->
     <citation type="doi">10.1093/bioinformatics/btu813</citation>
-    <!-- Guitton_2017 W4M 3.0 -->
+    <!-- Guitton_2017 W4m 3.0 -->
     <citation type="doi">10.1016/j.biocel.2017.07.002</citation>
     <!-- Smith_2006 XCMS -->
     <citation type="doi">10.1021/ac051437y</citation>

@@ -1,7 +1,7 @@
 categories: [Metabolomics]
-description: Filter W4M data files by class
+description: Filter W4M data files by metadata and intensity-data
 homepage_url: https://github.com/HegemanLab/w4mclassfilter_galaxy_wrapper
-long_description: Filter Workflow4Metabolomics data matrix and metadata by sample-class
+long_description: Filter Workflow4Metabolomics data by feature-metadata, sample-metadata, or data-matrix intensity-values
 name: w4mclassfilter
 owner: eschen42
 remote_repository_url: https://github.com/HegemanLab/w4mclassfilter_galaxy_wrapper/tree/master

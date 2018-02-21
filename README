@@ -1,7 +1,8 @@
 Galaxy Wrapper for the w4mclassfilter R Package
+<https://doi.org/10.5281/zenodo.1034793>
 
-This is a planemo <http://planemo.readthedocs.io/en/latest/> 
-oriented galaxy-tool-wrapper <https://docs.galaxyproject.org/en/latest/dev/schema.htm>
+This is a Galaxy tool-wrapper <https://docs.galaxyproject.org/en/latest/dev/schema.htm>
 to wrap the w4mclassfilter R package <https://github.com/HegemanLab/w4mclassfilter> 
 for use with the Workflow4Metabolomics <http://workflow4metabolomics.org/>
-flavor of Galaxy <https://galaxyproject.org/>
+flavor of Galaxy <https://galaxyproject.org/>.
+The tool is built with Planemo <http://planemo.readthedocs.io/en/latest/>.
