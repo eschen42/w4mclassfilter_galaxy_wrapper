@@ -445,31 +445,36 @@ Description
 The **W4m Data Subset** tool **selects subsets of samples, features, or data values** for further analysis.
 
 - The tool takes as input the data matrix, sample metadata, and variable metadata datasets produced by W4m's XCMS [Smith *et al.*, 2006] and CAMERA [Kuhl *et al.*, 2012] tools.
-- The tool produces the same trio of datasets with only the selected data, samples, or features.
+- The tool produces the same trio of output datasets, modified as follows.
 
-This tool performs several operations to address several data issues that may impede downstream statistical analysis:
+This tool can perform several operations to reduce the number samples or features to be analyzed (although **this should be done only in a statistically sound manner** consistent with the nature of the experiment):
+
+- Samples may be eliminated by filtering on a designated “sample class” column in sampleMetadata.
+- Features may be eliminated by specifying minimum or maximum value (or both) allowable in columns of variableMetadata.
+- Features may be eliminated by “range of row-maximum for each feature”, i.e., by specifying minimum or maximum intensity (or both) allowable in each row of the dataMatrix (i.e., for the feature across all samples).
+
+This tool also performs several operations to address several data issues that may impede downstream statistical analysis:
 
 - Missing values in dataMatrix are imputed to zero.
 - Samples that are missing from either sampleMetadata or dataMatrix are eliminated.
 - Features that are missing from either variableMetadata or dataMatrix are eliminated.
 - Features and samples that have zero variance are eliminated.
-- Samples and features are sorted alphabetically in rows and columns of variableMetadata, sampleMetadata, and dataMatrix.
-- By default, the names of the first columns of variableMetadata and sampleMetadata are set respectively to "variableMetadata" and "sampleMetadata".
+- Samples and features are sorted alphabetically in rows and columns of dataMatrix and in rows of variableMetadata and sampleMetadata.
+- The names of the first columns of variableMetadata and sampleMetadata are set respectively to "variableMetadata" and "sampleMetadata".
 
-This tool also can perform several operations to reduce the number samples or features to be analyzed (although **this should be done only in a statistically sensible manner** consistent with the nature of your experiment):
+This tool may be applied several times sequentially, which may be useful for:
 
-- Samples may be eliminated by filtering on a designated “sample class” column in sampleMetadata.
-- Features may be eliminated by specifying minimum or maximum value (or both) allowable in columns of variableMetadata.
-- Features may be eliminated by specifying minimum or maximum intensity (or both) allowable in columns of dataMatrix for at least one sample for each feature (“range of row-maximum for each feature”).
-
-This tool may be applied several times sequentially; for example, this may be useful for viewing clusters of progressively smaller subsets of samples.
+- analyzing subsets of samples for progressively smaller sets of treatment-levels, or
+- choosing subsets of samples based on criteria in several columns of the sampleMetadata table.
 
 -----------------
 Workflow Position
 -----------------
 
-- Upstream tool category: Preprocessing
-- Downstream tool categories: Normalisation, Statistical Analysis, Quality Control, Filter and Sort
+This tool can be used at any point downstream of Preprocessing.
+
+- Possible upstream tool categories: Preprocessing, Quality Control, Statistical Analysis
+- Possible downstream tool categories: Normalisation, Statistical Analysis, Quality Control, Filter and Sort
 
 -----------
 Input files
