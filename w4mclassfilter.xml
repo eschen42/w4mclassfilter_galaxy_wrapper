@@ -1,6 +1,8 @@
 <tool id="w4mclassfilter" name="W4m Data Subset" version="0.98.8">
   <description>Filter W4m data by values or metadata</description>
 
+  <!-- Here is the hyphenation standard that I *try* to apply consistently in my documentation: http://www.sandranoonan.com/dont-let-hyphenation-drive-crazy/ -->
+
   <requirements>
     <!-- <requirement type="package" version="6.2">readline</requirement> -->
     <requirement type="package" version="3.4.1">r-base</requirement>
@@ -43,7 +45,7 @@
         </valid>
       </sanitizer>
     </param>
-    <param name="sampleclassNames" label="Names of sample-classes" type="text" value = "" help="comma-separated names (or comma-less regular expressions to match names) of sample-classes to filter in or out; defaults to no names">
+    <param name="sampleclassNames" label="Names of sample-classes" type="text" value = "" help="comma-separated names (or regular expressions to match names) of sample-classes to filter in or out; defaults to no names">
       <sanitizer>
         <valid initial="string.letters">
           <add preset="string.digits"/>
@@ -69,16 +71,16 @@
       </sanitizer>
     </param>
 
-    <param name="wildcards" label="Use wild-cards or regular-expressions" type="select" help="wild-cards (the default) - use '*' and '?' to match class names; regular-expressions - use comma-less regular expressions to match class names">
+    <param name="wildcards" label="Use 'wild cards' or 'regular expressions'" type="select" help="'wild-cards' (the default) - use '*' and '?' to match class names; 'regular-expressions' - use regular expressions to match class names">
       <option value="TRUE" selected="true">wild-cards</option>
       <option value="FALSE">regular-expressions</option>
     </param>
-    <param name="inclusive" label="Include named classes" type="select" help="filter-in - include only the named sample-classes; filter-out (the default) - exclude only the named sample-classes">
+    <param name="inclusive" label="Exclude/include named classes" type="select" help="'filter-out' (the default) - exclude only the named sample-classes; 'filter-in' - include only the named sample-classes">
       <option value="TRUE">filter-in</option>
       <option value="FALSE" selected="true">filter-out</option>
     </param>
     
-    <param name="variableRangeFilter" label="Variable range-filters" type="text" value = "" help="comma-separated filters, each specified as 'variableMetadataColumnName:min:max'; default is no filters.  (See help below.)">
+    <param name="variableRangeFilter" label="Variable-range filters" type="text" value = "" help="comma-separated filters, each specified as 'variableMetadataColumnName:min:max'; default is no filters.  (See help below.)">
       <sanitizer>
         <valid initial="string.letters">
           <add preset="string.digits"/>
@@ -512,15 +514,15 @@ Column that names the sample-class (default = '``class``')
 	|
 
 Names of sample-classes (default = no names)
-	| comma-separated names of sample-classes to include or exclude
+	| comma-separated names (or regular expressions to match names) of sample-classes to include or exclude
 	|
 
-Wild-cards (default = '``wild-cards``')
-	| '``wild-cards``' - use wild-cards to match names of sample-classes (see the 'Wild card patterns to match class-names' section below)
-	| '``regular-expressions``' - exclude only the named sample-classes (see the 'Regular expression patterns to match class-names' section below)
+'Wild cards' or 'regular expressions' (default = '``wild-cards``')
+	| '``wild-cards``' - use wild cards to match names of sample-classes (see the 'Wild card patterns to match class-names' section below)
+	| '``regular-expressions``' - use regular expressions to match the named sample-classes (see the 'Regular expression patterns to match class-names' section below)
 	|
 
-Include named classes (default = '``filter-out``')
+Exclude/include named classes (default = '``filter-out``')
 	| '``filter-in``' - include only the named sample-classes
 	| '``filter-out``' - exclude only the named sample-classes
 	|
@@ -549,9 +551,9 @@ dataMatrix
 	|
 
 
----------------------------------------
-Wild card patterns to match class-names
----------------------------------------
+-----------------------------------------
+'Wild card' patterns to match class-names
+-----------------------------------------
 
 W4m Data Subset supports use of R "wild card" patterns to select class-names.
 
@@ -565,9 +567,9 @@ For example
 - '``*.sample``' matches '``my.sample``' and '``my.own.sample``'
 - '``*.sampl``' matches neither '``my.sample``' nor '``my.own.sample``'
 
-------------------------------------------------
-Regular expression patterns to match class-names
-------------------------------------------------
+--------------------------------------------------
+'Regular expression' patterns to match class-names
+--------------------------------------------------
 
 W4m Data Subset supports use of R "regular expression" patterns to select class-names.
 
