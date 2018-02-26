@@ -1,5 +1,4 @@
-﻿<tool id="w4mclassfilter" name="W4m_Data_Subset" version="0.98.8">
-  <!-- this file is utf-8, not ASCII, because it contains the character é -->
+<tool id="w4mclassfilter" name="W4m Data Subset" version="0.98.8">
   <description>Filter W4m data by values or metadata</description>
 
   <requirements>
@@ -23,7 +22,7 @@
   inclusive '$inclusive'
   wildcards '$wildcards'
   classnameColumn '$classnameColumn'
-  samplenameColumn '$samplenameColumn'
+  samplenameColumn 'sampleMetadata'
   variable_range_filter '$variableRangeFilter'
   dataMatrix_out '$dataMatrix_out'
   sampleMetadata_out '$sampleMetadata_out'
@@ -34,12 +33,23 @@
     <param name="dataMatrix_in" label="Data matrix file" type="data" format="tabular" help="variable x sample, decimal: '.', missing: NA, mode: numerical, separator: tab" />
     <param name="sampleMetadata_in" label="Sample metadata file" type="data" format="tabular" help="sample x metadata columns, separator: tab" />
     <param name="variableMetadata_in" label="Variable metadata file" type="data" format="tabular" help="variable x metadata columns, separator: tab" />
-    <param name="samplenameColumn" label="Column that names the sample" type="text" value = "sampleMetadata" help="name of the column in the sample metadata file that has the name of the sample - defaults to 'sampleMetadata'" />
-    <param name="classnameColumn" label="Column that names the sample-class" type="text" value = "class" help="name of the column in sample metadata that has the values to be tested against the 'classes' input parameter - defaults to 'class'" />
-    <param name="sampleclassNames" label="Names of sample classes" type="text" value = "" help="comma-separated names (or comma-less regular expressions to match names) of sample-classes to filter in or out; defaults to no names">
+    <param name="classnameColumn" label="Column that names the sample-class" type="text" value = "class" help="name of the column in sample metadata that has the values to be tested against the 'Names of sample-classes' input parameter - defaults to 'class'">
       <sanitizer>
         <valid initial="string.letters">
           <add preset="string.digits"/>
+          <add value="&#45;"  /> <!-- dash, hyphen -->
+          <add value="&#46;"  /> <!-- dot, period -->
+          <add value="&#95;"  /> <!-- underscore -->
+        </valid>
+      </sanitizer>
+    </param>
+    <param name="sampleclassNames" label="Names of sample-classes" type="text" value = "" help="comma-separated names (or comma-less regular expressions to match names) of sample-classes to filter in or out; defaults to no names">
+      <sanitizer>
+        <valid initial="string.letters">
+          <add preset="string.digits"/>
+          <add value="&#123;" /> <!-- l-cube, left-curly-bracket -->
+          <add value="&#124;" /> <!-- pipe -->
+          <add value="&#125;" /> <!-- r-cube, right-curly-bracket -->
           <add value="&#36;"  /> <!-- dollar, dollar-sign -->
           <add value="&#40;"  /> <!-- left-paren -->
           <add value="&#41;"  /> <!-- right-paren -->
@@ -54,9 +64,7 @@
           <add value="&#92;"  /> <!-- whack, backslash -->
           <add value="&#93;"  /> <!-- r-squib, right-squre-bracket -->
           <add value="&#94;"  /> <!-- hat, caret -->
-          <add value="&#123;" /> <!-- l-cube, left-curly-bracket -->
-          <add value="&#124;" /> <!-- pipe -->
-          <add value="&#125;" /> <!-- r-cube, right-curly-bracket -->
+          <add value="&#95;"  /> <!-- underscore -->
         </valid>
       </sanitizer>
     </param>
@@ -65,7 +73,7 @@
       <option value="TRUE" selected="true">wild-cards</option>
       <option value="FALSE">regular-expressions</option>
     </param>
-    <param name="inclusive" label="Include named classes" type="select" help="filter-in - include only the named sample classes; filter-out (the default) - exclude only the named sample classes">
+    <param name="inclusive" label="Include named classes" type="select" help="filter-in - include only the named sample-classes; filter-out (the default) - exclude only the named sample-classes">
       <option value="TRUE">filter-in</option>
       <option value="FALSE" selected="true">filter-out</option>
     </param>
@@ -75,17 +83,19 @@
         <valid initial="string.letters">
           <add preset="string.digits"/>
           <add value="&#44;"  /> <!-- comma -->
-          <add value="&#58;"  /> <!-- colon -->
+          <add value="&#45;"  /> <!-- dash, hyphen -->
           <add value="&#46;"  /> <!-- dot, period -->
+          <add value="&#58;"  /> <!-- colon -->
+          <add value="&#95;"  /> <!-- underscore -->
         </valid>
       </sanitizer>
     </param>
     
   </inputs>
   <outputs>
-    <data name="dataMatrix_out" label="${tool.name}_${dataMatrix_in.name}" format="tabular" ></data>
-    <data name="sampleMetadata_out" label="${tool.name}_${sampleMetadata_in.name}" format="tabular" ></data>
-    <data name="variableMetadata_out" label="${tool.name}_${variableMetadata_in.name}" format="tabular" ></data>
+    <data name="dataMatrix_out" label="${dataMatrix_in.name}.subset" format="tabular" ></data>
+    <data name="sampleMetadata_out" label="${sampleMetadata_in.name}.subset" format="tabular" ></data>
+    <data name="variableMetadata_out" label="${variableMetadata_in.name}.subset" format="tabular" ></data>
   </outputs>
 
   <tests>
@@ -96,7 +106,6 @@
       <param name="classnameColumn" value="class"/>
       <param name="sampleclassNames" value=""/>
       <param name="wildcards" value="FALSE"/>
-      <param name="samplenameColumn" value="sampleMetadata"/>
       <param name="inclusive" value="filter-out"/>
       <param name="variableRangeFilter" value="FEATMAX:2e6:,mz:200:,rt::800"/>
       <output name="sampleMetadata_out">
@@ -149,7 +158,6 @@
       <param name="variableMetadata_in" value="input_variableMetadata.tsv"/>
       <param name="classnameColumn" value="gender"/>
       <param name="sampleclassNames" value="M"/>
-      <param name="samplenameColumn" value="sampleMetadata"/>
       <param name="inclusive" value="filter-in"/>
       <output name="dataMatrix_out">
         <assert_contents>
@@ -199,7 +207,6 @@
       <param name="classnameColumn" value="gender"/>
       <param name="sampleclassNames" value="*"/>
       <param name="wildcards" value="TRUE"/>
-      <param name="samplenameColumn" value="sampleMetadata"/>
       <param name="inclusive" value="filter-in"/>
       <output name="sampleMetadata_out">
         <assert_contents>
@@ -233,7 +240,6 @@
       <param name="classnameColumn" value="gender"/>
       <param name="sampleclassNames" value="M"/>
       <param name="wildcards" value="FALSE"/>
-      <param name="samplenameColumn" value="sampleMetadata"/>
       <param name="inclusive" value="filter-in"/>
       <output name="sampleMetadata_out">
         <assert_contents>
@@ -267,7 +273,6 @@
       <param name="classnameColumn" value="gender"/>
       <param name="sampleclassNames" value="M"/>
       <param name="wildcards" value="FALSE"/>
-      <param name="samplenameColumn" value="sampleMetadata"/>
       <param name="inclusive" value="filter-in"/>
       <output name="variableMetadata_out">
         <assert_contents>
@@ -297,7 +302,6 @@
       <param name="classnameColumn" value="gender"/>
       <param name="sampleclassNames" value="M"/>
       <param name="wildcards" value="FALSE"/>
-      <param name="samplenameColumn" value="sampleMetadata"/>
       <param name="inclusive" value="filter-in"/>
       <output name="variableMetadata_out">
         <assert_contents>
@@ -327,7 +331,6 @@
       <param name="classnameColumn" value="gender"/>
       <param name="sampleclassNames" value="[Mm],[fF]"/>
       <param name="wildcards" value="FALSE"/>
-      <param name="samplenameColumn" value="sampleMetadata"/>
       <param name="inclusive" value="filter-in"/>
       <output name="sampleMetadata_out">
         <assert_contents>
@@ -361,7 +364,6 @@
       <param name="classnameColumn" value=""/>
       <param name="sampleclassNames" value="M"/>
       <param name="wildcards" value="FALSE"/>
-      <param name="samplenameColumn" value="sampleMetadata"/>
       <param name="inclusive" value="filter-in"/>
       <output name="sampleMetadata_out">
         <assert_contents>
@@ -417,44 +419,50 @@ See the **NEWS** section at the bottom of this page
 "W4m Data Subset" - Filter Workflow4Metabolomics data files
 ===========================================================
 
-Note: Earlier versions of this tool were shown in Galaxy with the name "Sample Subset".
-
 ----------
 Motivation
 ----------
 
-GC-MS and LC-MS experiments seek to resolve chemicals as features that have distinct chromatographic retention time ("rt") and mass-to-charge ratio ("m/z" or "mz").
+GC-MS and LC-MS experiments seek to resolve as features chemicals that have distinct chromatographic retention-time ("rt") and (after ionization) mass-to-charge ratio ("m/z" or "mz").
+(If the MS protocol includes fragmentation, several features may result for each chemical.)
 Data for a sample are collected as MS intensities, each of which is associated with a position on a 2D plane with dimensions of rt and m/z.
 Ideally, features would be sufficiently reproducible among sample-runs to distinguish features that are commmon among samples from those that differ.
-However, the chromatographic retention time for a chemical can vary from one run to another.
 
-Workflow4Metabolomics (W4m, [Giacomoni *et al.*, 2014, Guitton *et al.* 2017]) is a "flavor" of Galaxy that uses the XCMS preprocessing tools for "retention time correction" to align features among samples; features may be better aligned if pooled samples and blanks are included.
+The chromatographic retention-time for a chemical can vary from one chromatography run to the next.  
+Workflow4Metabolomics (W4m, [Giacomoni *et al.*, 2014, Guitton *et al.* 2017]) is a "flavor" of Galaxy that uses the XCMS preprocessing tools for "retention-time correction" to align features among samples.
+Features may be better aligned if pooled samples and blanks are included.
 
-Multivariate statistical techniques may be used to discover clusters of similar samples (Thévenot *et al.*, 2015).
-However, once retention-time alignment of features has been achieved among samples in GC-MS and LC-MS datasets, the presence of pools and blanks may confound identification and separation of clusters.
-Multivariate statistical algorithms also may be impacted by missing values or dimensions that have zero variance.
+Multivariate statistical techniques may be used to discover clusters of similar samples (Th]]>&#233;<![CDATA[venot *et al.*, 2015).
+However, once retention-time alignment of features has been achieved among samples in GC-MS and LC-MS datasets:
+
+- The presence of pools and blanks may confound identification and separation of clusters.
+- Multivariate statistical algorithms may be impacted by missing values or dimensions that have zero variance.
 
 -----------
 Description
 -----------
 
 The **W4m Data Subset** tool **selects subsets of samples, features, or data values** for further analysis.
-The tool takes as input the data matrix, sample metadata, and variable metadata datasets produced by W4m's XCMS [Smith *et al.*, 2006] tools and produces the same trio of datasets with only the selected data, samples, or features.
 
-This tool performs several operations either to reduce the number samples or features to be analyzed or to address several data issues that may impede downstream statistical analysis:
+- The tool takes as input the data matrix, sample metadata, and variable metadata datasets produced by W4m's XCMS [Smith *et al.*, 2006] and CAMERA [Kuhl *et al.*, 2012] tools.
+- The tool produces the same trio of datasets with only the selected data, samples, or features.
 
-- Samples that are missing from either sampleMetadata or dataMatrix are eliminated.
-- Samples may also be eliminated by a “sample class” column in sampleMetadata.
-- Features that are missing from either variableMetadata or dataMatrix are eliminated.
-- Features may be eliminated by specifying minimum or maximum value (or both) allowable in columns of variableMetadata.
-- Features may be eliminated by specifying minimum or maximum intensity (or both) allowable in columns of dataMatrix for at least one sample for each feature (“range of row-maximum for each feature”).
+This tool performs several operations to address several data issues that may impede downstream statistical analysis:
+
 - Missing values in dataMatrix are imputed to zero.
+- Samples that are missing from either sampleMetadata or dataMatrix are eliminated.
+- Features that are missing from either variableMetadata or dataMatrix are eliminated.
 - Features and samples that have zero variance are eliminated.
 - Samples and features are sorted alphabetically in rows and columns of variableMetadata, sampleMetadata, and dataMatrix.
 - By default, the names of the first columns of variableMetadata and sampleMetadata are set respectively to "variableMetadata" and "sampleMetadata".
 
+This tool also can perform several operations to reduce the number samples or features to be analyzed (although **this should be done only in a statistically sensible manner** consistent with the nature of your experiment):
 
-The W4m Data Subset tool may be applied several times sequentially; for example, this may be useful for clustering progressively smaller subsets of samples until observable separation of clusters is no longer significant.
+- Samples may be eliminated by filtering on a designated “sample class” column in sampleMetadata.
+- Features may be eliminated by specifying minimum or maximum value (or both) allowable in columns of variableMetadata.
+- Features may be eliminated by specifying minimum or maximum intensity (or both) allowable in columns of dataMatrix for at least one sample for each feature (“range of row-maximum for each feature”).
+
+This tool may be applied several times sequentially; for example, this may be useful for viewing clusters of progressively smaller subsets of samples.
 
 -----------------
 Workflow Position
@@ -483,7 +491,7 @@ Parameters
 ----------
 
 Data matrix file
-	| variable x sample **dataMatrix** (tabular separated values) file of the numeric data matrix, with . as decimal, and NA for missing values; the table must not contain metadata apart from row and column names; the row and column names must be identical to the rownames of the sample and variable metadata, respectively (see below)
+	| variable x sample **dataMatrix** (tabular separated values) file of the numeric data matrix, with . as decimal, and NA for missing values; the table must not contain metadata apart from row and column names; the row and column names must be identical, respectively, to the rownames of the sample metadata file and variable metadata file
 	|
 
 Sample metadata file
@@ -494,30 +502,26 @@ Variable metadata file
 	| variable x metadata **variableMetadata** (tabular separated values) file of the numeric and/or character variable metadata, with . as decimal and NA for missing values
 	|
 
-Column that names the sample (default = '``sampleMetadata``')
-	| name of the column in sample metadata that has the name of the sample
-	|
-
 Column that names the sample-class (default = '``class``')
-	| name of the column in sample metadata that has the values to be tested against the '``classes``' input parameter
+	| name of the column in **sampleMetadata** that has the values to be tested against the '``Names of sample-classes``' input parameter
 	|
 
-Names of sample classes (default = no names)
-	| comma-separated names of sample classes to include or exclude
+Names of sample-classes (default = no names)
+	| comma-separated names of sample-classes to include or exclude
 	|
 
 Wild-cards (default = '``wild-cards``')
-	| '``wild-cards``' - use wild-cards to match names of sample classes (see 'Wild card patterns to match class-names' below)
-	| '``regular-expressions``' - exclude only the named sample classes (see 'Regular expression patterns to match class-names' below)
+	| '``wild-cards``' - use wild-cards to match names of sample-classes (see the 'Wild card patterns to match class-names' section below)
+	| '``regular-expressions``' - exclude only the named sample-classes (see the 'Regular expression patterns to match class-names' section below)
 	|
 
 Include named classes (default = '``filter-out``')
-	| '``filter-in``' - include only the named sample classes
-	| '``filter-out``' - exclude only the named sample classes
+	| '``filter-in``' - include only the named sample-classes
+	| '``filter-out``' - exclude only the named sample-classes
 	|
 
 Variable-range filters (default = no filters)
-	| comma-separated names of variable-range filters (see 'Variable-range filters' below)
+	| comma-separated names of variable-range filters (see the 'Variable-range filters' section below)
 	|
 
 
@@ -528,15 +532,15 @@ Output files
 
 
 sampleMetadata
-	| (tabular separated values) file identical to the **sampleMetadata** file given as an input argument, excepting lacking rows for samples (xC-MS features) that have been filtered out (by the sample-class filter or because of zero variance)
+	| (tabular separated values) file identical to the **sampleMetadata** file given as an input argument, excepting lacking rows for samples that have been filtered out (by the sample-class filter, or because of zero variance, or because they were missing in the input data matrix)
 	|
 
 variableMetadata
-	| (tabular separated values) file identical to the **variableMetadata** file given as an input argument, excepting lacking rows for variables (xC-MS features) that have been filtered out (because of zero variance)
+	| (tabular separated values) file identical to the **variableMetadata** file given as an input argument, excepting lacking rows for variables (xC-MS features) that have been filtered out (by the variable-range filter, or because of zero variance, or because they were missing in the input data matrix)
 	|
 
 dataMatrix
-	| (tabular separated values) file identical to the **dataMatrix** file given as an input argument, excepting lacking rows for variables (xC-MS features) that have been filtered out (because of zero variance) and columns that have been filtered out (by the sample-class filter or because of zero variance)
+	| (tabular separated values) file identical to the **dataMatrix** file given as an input argument, excepting lacking rows and columns for variables and samples that have been filtered out, respectively
 	|
 
 
@@ -544,7 +548,7 @@ dataMatrix
 Wild card patterns to match class-names
 ---------------------------------------
 
-Beginning with v0.98.2, W4m Data Subset supports use of R "wild card" patterns to select class-names.
+W4m Data Subset supports use of R "wild card" patterns to select class-names.
 
 - use '``?``' to match a single character
 - use '``*``' to match zero or more characters
@@ -560,7 +564,7 @@ For example
 Regular expression patterns to match class-names
 ------------------------------------------------
 
-Beginning with v0.98.2, W4m Data Subset supports use of R "regular expression" patterns to select class-names.
+W4m Data Subset supports use of R "regular expression" patterns to select class-names.
 
 R uses POSIX 1003.2 standard regular expressions, which allow precise pattern-matching and are exhaustively defined at:
 http://pubs.opengroup.org/onlinepubs/9699919799/basedefs/V1_chap09.html
@@ -652,13 +656,11 @@ This example retains only samples whose 'gender' attribute is 'M'.
 +------------------------------------+-----------------+
 | Input Parameter                    | Value           |
 +====================================+=================+
-| Names of sample classes            | M               |
+| Names of sample-classes            | M               |
 +------------------------------------+-----------------+
 | Include named classes              | filter-in       |
 +------------------------------------+-----------------+
 | Column that names the sample-class | gender          |
-+------------------------------------+-----------------+
-| Column that names the sample       | sampleMetadata  |
 +------------------------------------+-----------------+
 
 **Expected outputs**
@@ -687,13 +689,11 @@ This example retains all samples (except those having zero variance for all feat
 +------------------------------------+-------------------------------+
 | Input Parameter                    | Value                         |
 +====================================+===============================+
-| Names of sample classes            | (Leave this field empty.)     |
+| Names of sample-classes            | (Leave this field empty.)     |
 +------------------------------------+-------------------------------+
 | Include named classes              | filter-out                    |
 +------------------------------------+-------------------------------+
 | Column that names the sample-class | class                         |
-+------------------------------------+-------------------------------+
-| Column that names the sample       | sampleMetadata                |
 +------------------------------------+-------------------------------+
 | Variable range-filters             | FEATMAX:2e6:,mz:200:,rt::800  |
 +------------------------------------+-------------------------------+
@@ -716,64 +716,66 @@ This example retains all samples (except those having zero variance for all feat
 NEWS
 ----
 
-CHANGES IN VERSION 0.98.8
+Changes in version 0.98.8
 =========================
 
 New features
 
-* The tool now appears in Galaxy with a new, more representative name: "W4m Data Subset"
-* Some documentation was updated or clarified.
-* There are no functional changes.
+- There are no functional changes.
+- Output datasets are named in conformance with the W4m convention of appending the name of each preprocessing tool to the input dataset name.
+- The tool now appears in Galaxy with a new, more representative name: "W4m Data Subset". (Earlier versions of this tool appeared in Galaxy with the name "Sample Subset".)
+- Eliminated superflous "Column that names the sample" input parameter.
+- Some documentation was updated or clarified.
 
 Internal modifications
 
-* None
+- None
 
-CHANGES IN VERSION 0.98.7
+Changes in version 0.98.7
 =========================
 
 New features
 
-* First column of output variableMetadata (that has feature names) now is always named "variableMetadata".
-* First column of output sampleMetadata now (that has sample names) is always named "sampleMetadata".
+- First column of output variableMetadata (that has feature names) now is always named "variableMetadata".
+- First column of output sampleMetadata now (that has sample names) now is always named "sampleMetadata".
 
 Internal modifications
 
-* Now uses w4mclassfilter R package v0.98.7.
+- Now uses w4mclassfilter R package v0.98.7.
 
-CHANGES IN VERSION 0.98.6
+Changes in version 0.98.6
 =========================
 
 New features
 
-* Added support for filtering out features whose attributes fall outside specified ranges.
+- Added support for filtering out features whose attributes fall outside specified ranges.
   For more detail, see "Variable-range filters" above.
   
 Internal modifications
 
-* Now uses w4mclassfilter R package v0.98.6.
-* Now sorts sample names and feature names in output files because some statistical tools expect the same order in `dataMatrix` row and column names as in the corresponding metadata files.
+- Now uses w4mclassfilter R package v0.98.6.
+- Now sorts sample names and feature names in output files because some statistical tools expect the same order in `dataMatrix` row and column names as in the corresponding metadata files.
 
 Changes in version 0.98.3
 =========================
 
 Internal modifications
 
-* Improved input handling.
-* Now uses w4mclassfilter R package v0.98.3, although that version has no functional implications for this tool.
-* Improved reference-list.
+- Improved input handling.
+- Now uses w4mclassfilter R package v0.98.3, although that version has no functional implications for this tool.
+- Improved reference-list.
 
 Changes in version 0.98.2
 =========================
 
 New features
 
-* Added support for R-flavored regular expression pattern-matching when selecting names of sample-classes.
-* Empty classes argument or zero-length class_column result in no samples filtered out.
+- Added support for R-flavored regular expression pattern-matching when selecting names of sample-classes.
+- Empty classes argument or zero-length class_column result in no samples filtered out.
 
 Internal modifications
 
-* Support and tests for new features.
+- Support and tests for new features.
 
 Changes in version 0.98.1
 =========================
@@ -782,13 +784,9 @@ First release - Wrap the w4mclassfilter R package that implements filtering of W
 
 New features
 
-* *dataMatrix* *is* modified by the tool, so it *does* appear as an output file
-* *sampleMetadata* *is* modified by the tool, so it *does* appear as an output file
-* *variableMetadata* *is* modified by the tool, so it *does* appear as an output file
-
-Internal modifications
-
-* N/A
+- Output *dataMatrix*       is input dataMatrix       as modified by the tool
+- Output *sampleMetadata*   is input sampleMetadata   as modified by the tool
+- Output *variableMetadata* is input variableMetadata as modified by the tool
 
   ]]></help>
   <citations>
@@ -796,9 +794,11 @@ Internal modifications
     <citation type="doi">10.1093/bioinformatics/btu813</citation>
     <!-- Guitton_2017 W4m 3.0 -->
     <citation type="doi">10.1016/j.biocel.2017.07.002</citation>
+    <!-- Kuhl_2012 CAMERA -->
+    <citation type="doi">10.1021/ac202450g</citation>
     <!-- Smith_2006 XCMS -->
     <citation type="doi">10.1021/ac051437y</citation>
-    <!-- Th_venot_2015 Urinary metabolome statistics -->
+    <!-- Thevenot_2015 Urinary metabolome statistics -->
     <citation type="doi">10.1021/acs.jproteome.5b00354</citation>
   </citations>
   <!--

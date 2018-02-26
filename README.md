@@ -43,19 +43,19 @@ The W4m Data Subset tool selects subsets of samples, features, or data values fo
 This tool performs several operations to address several data issues that may impede downstream statistical analysis:
 
   - Missing values in dataMatrix are imputed to zero.
+  - Samples that are missing from either sampleMetadata or dataMatrix are eliminated.
+  - Features that are missing from either variableMetadata or dataMatrix are eliminated.
   - Features and samples that have zero variance are eliminated.
   - Samples and features are sorted alphabetically in rows and columns of variableMetadata, sampleMetadata, and dataMatrix.
   - By default, the names of the first columns of variableMetadata and sampleMetadata are set respectively to "variableMetadata" and "sampleMetadata".
 
-This tool performs several operations to reduce the number samples or features to be analyzed, although **this should be done only after significance tests** (see [Further considerations concerning sample-selection and hypothesis-testing](#further-considerations-concerning-sample-selection-and-hypothesis-testing) below):
+This tool also can perform several operations to reduce the number samples or features to be analyzed (although **this should be done only in a statistically sensible manner** consistent with the nature of your experiment):
 
-  - Samples that are missing from either sampleMetadata or dataMatrix are eliminated.
-  - Samples may also be eliminated by a “sample class” column in sampleMetadata.
-  - Features that are missing from either variableMetadata or dataMatrix are eliminated.
+  - Samples may be eliminated by filtering on a designated “sample class” column in sampleMetadata.
   - Features may be eliminated by specifying minimum or maximum value (or both) allowable in columns of variableMetadata.
   - Features may be eliminated by specifying minimum or maximum intensity (or both) allowable in columns of dataMatrix for at least one sample for each feature (“range of row-maximum for each feature”).
 
-The W4m Data Subset tool may be applied several times sequentially; for example, this may be useful for clustering progressively smaller subsets of samples until observable separation of clusters is no longer significant.
+The W4m Data Subset tool may be applied several times sequentially; for example, this may be useful for viewing clusters of progressively smaller subsets of samples.
 
 ## Galaxy Workflow Position
 
@@ -102,22 +102,6 @@ The W4m Data Subset tool may be applied several times sequentially; for example,
 	* (tabular separated values) file identical to the **variableMetadata** file given as an input argument, excepting lacking rows for variables (xC-MS features) that have been filtered out (because of zero variance)
 * dataMatrix
 	* (tabular separated values) file identical to the **dataMatrix** file given as an input argument, excepting lacking rows for variables (xC-MS features) that have been filtered out (because of zero variance) and columns that have been filtered out (by the sample-class filter or because of zero variance)
-
-## Further considerations concerning sample-selection and hypothesis-testing
-
-In untargeted metabolomic analysis, we collect the many "features" (intensity of the mass spectrum versus the mass-to-charge ratio and the chromatographic retention time).
-The data-processing workflow that we follow (from [Thévenot 2015]) performs an univariate test of significance of the variation of features and retains for multivariate analysis only those features found to be significant, with FDR-adjustment of the p-value.
-
-Our understanding is that:
-  - A p-value is calculated for each feature for the null hypothesis that the feature does not vary significantly between treatment levels for all samples.
-  - The p-value is adjusted according to the number of features analyzed.
-  - The p-value needs to be adjusted because, e.g., at the unadjusted 1% level, for 10,000 features, 100 would be expected to appear significant by random chance.
-    - Decreasing the number of features would falsely (or at least misleadingly) decrease the FDR-adjusted p-value.
-    - Decreasing the number of samples might "reduce the power of the statistical test".
-
-Therefore, we do not recommend eliminating samples or features until after univariate hypothesis testing has been performed.
-
-"False Discovery Rate" [Benjamini, 1995; Yekutieli, 2001] is a less conservative than Bonferroni correction and thus more suitable to the many simultaneous hypothesis testes encountered in metabolomic analysis.  Therefore, "fdr" or "BY" would be the preferable choices for adjusting the p-value when running the W4m Univariate statistics tool.
 
 ## NEWS
 
