@@ -38,29 +38,33 @@ Multivariate statistical techniques may be used to discover clusters of similar 
 
 ## Description
 
-The W4m Data Subset tool selects subsets of samples, features, or data values for further analysis. The tool takes as input the data matrix, sample metadata, and variable metadata datasets produced by Workflow4Metabolomics tools and produces the same trio of datasets with only the selected data, samples, or features.
+The W4m Data Subset tool selects subsets of samples, features, or data values for further analysis.
+
+- The tool takes as input the data matrix, sample metadata, and variable metadata datasets produced by produced by W4m's XCMS [Smith et al., 2006] and CAMERA [Kuhl et al., 2012] tools.
+- The tool produces as output the same trio of datasets, modified as follows:
 
 This tool performs several operations to address several data issues that may impede downstream statistical analysis:
 
-  - Missing values in dataMatrix are imputed to zero.
-  - Samples that are missing from either sampleMetadata or dataMatrix are eliminated.
-  - Features that are missing from either variableMetadata or dataMatrix are eliminated.
-  - Features and samples that have zero variance are eliminated.
-  - Samples and features are sorted alphabetically in rows and columns of variableMetadata, sampleMetadata, and dataMatrix.
-  - By default, the names of the first columns of variableMetadata and sampleMetadata are set respectively to "variableMetadata" and "sampleMetadata".
+- Missing values in dataMatrix are imputed to zero.
+- The dataMatrix values may be log-transformed if desired.
+- Samples that are missing from either sampleMetadata or dataMatrix are eliminated.
+- Features that are missing from either variableMetadata or dataMatrix are eliminated.
+- Features and samples that have zero variance are eliminated.
+- Samples and features are sorted alphabetically in rows and columns of variableMetadata, sampleMetadata, and dataMatrix.
+- By default, the names of the first columns of variableMetadata and sampleMetadata are set respectively to "variableMetadata" and "sampleMetadata".
 
 This tool also can perform several operations to reduce the number samples or features to be analyzed (although **this should be done only in a statistically sensible manner** consistent with the nature of your experiment):
 
-  - Samples may be eliminated by filtering on a designated “sample class” column in sampleMetadata.
-  - Features may be eliminated by specifying minimum or maximum value (or both) allowable in columns of variableMetadata.
-  - Features may be eliminated by specifying minimum or maximum intensity (or both) allowable in columns of dataMatrix for at least one sample for each feature (“range of row-maximum for each feature”).
+- Samples may be eliminated by filtering on a designated “sample class” column in sampleMetadata.
+- Features may be eliminated by specifying minimum or maximum value (or both) allowable in columns of variableMetadata.
+- Features may be eliminated by specifying minimum or maximum intensity (or both) allowable in columns of dataMatrix for at least one sample for each feature (“range of row-maximum for each feature”).
 
 The W4m Data Subset tool may be applied several times sequentially; for example, this may be useful for viewing clusters of progressively smaller subsets of samples.
 
 ## Galaxy Workflow Position
 
-  - Upstream tool category: Preprocessing
-  - Downstream tool categories: Normalisation, Statistical Analysis, Quality Control
+- Possible upstream tool categories: Preprocessing, Quality Control, Statistical Analysis, Filter and Sort
+- Downstream tool categories: Normalisation, Statistical Analysis, Quality Control, Filter and Sort
 
 ## Input files
 
@@ -73,26 +77,30 @@ The W4m Data Subset tool may be applied several times sequentially; for example,
 
 ## Parameters
 
-* Data matrix file
-  * variable x sample **dataMatrix** (tabular separated values) file of the numeric data matrix, with . as decimal, and NA for missing values; the table must not contain metadata apart from row and column names; the row and column names must be identical to the rownames of the sample and variable metadata, respectively (see below)
-* Sample metadata file
-  * sample x metadata **sampleMetadata** (tabular separated values) file of the numeric and/or character sample metadata, with . as decimal and NA for missing values
-* Variable metadata file
-	* variable x metadata **variableMetadata** (tabular separated values) file of the numeric and/or character variable metadata, with . as decimal and NA for missing values
-* Column that names the sample (default = 'sampleMetadata')
-	* name of the column in sample metadata that has the name of the sample
-* Column that names the sample-class (default = 'class')
-	* name of the column in sample metadata that has the values to be tested against the 'classes' input parameter
-* Names of sample classes (default = no names)
-	* comma-separated names of sample classes to include or exclude
-* Use wild-cards or regular-expressions (default = 'wild-cards')
-	* *wild-cards*  use '`*`' and '`?`' to match class names
-	* *regular-expressions* - use comma-less regular expressions to match class names
-* Include named classes (default = 'filter-out')
-	* *filter-in* - include only the named sample classes
-	* *filter-out* - exclude only the named sample classes
-* Variable range-filters (default = no filters)
-	* comma-separated filters, each specified as 'variableMetadataColumnName:min:max'; default is no filters
+- Data matrix file
+  - variable x sample **dataMatrix** (tabular separated values) file of the numeric data matrix, with . as decimal, and NA for missing values; the table must not contain metadata apart from row and column names; the row and column names must be identical to the rownames of the sample and variable metadata, respectively (see below)
+- Sample metadata file
+  - sample x metadata **sampleMetadata** (tabular separated values) file of the numeric and/or character sample metadata, with . as decimal and NA for missing values
+- Variable metadata file
+  - variable x metadata **variableMetadata** (tabular separated values) file of the numeric and/or character variable metadata, with . as decimal and NA for missing values
+- Column that names the sample (default = 'sampleMetadata')
+  - name of the column in sample metadata that has the name of the sample
+- Column that names the sample-class (default = 'class')
+  - name of the column in sample metadata that has the values to be tested against the 'classes' input parameter
+- Names of sample classes (default = no names)
+  - comma-separated names of sample classes to include or exclude
+- Use wild-cards or regular-expressions (default = 'wild-cards')
+  - *wild-cards*  use '`*`' and '`?`' to match class names
+  - *regular-expressions* - use comma-less regular expressions to match class names
+- Include named classes (default = 'filter-out')
+  - *filter-in* - include only the named sample classes
+  - *filter-out* - exclude only the named sample classes
+- Variable range-filters (default = no filters)
+  - comma-separated filters, each specified as 'variableMetadataColumnName:min:max'; default is no filters
+- Data transformation (default = 'none')
+  - *none* - do not transform data matrix values
+  - *log10* - take the log base 10 of the values in the data matrix
+  - In both cases, negative and missing values are imputed to zero.
 
 ## Output files
 
@@ -108,9 +116,11 @@ The W4m Data Subset tool may be applied several times sequentially; for example,
 ### Changes in version 0.98.8
 
 #### New features
-* The tool now appears in Galaxy with a new, more representative name: "W4m Data Subset"
+* The tool now appears in Galaxy with a new, more representative name: "W4m Data Subset". (Earlier versions of this tool appeared in Galaxy with the name "Sample Subset".)
+* Option was added to log-transform data matrix values.
+* Output datasets are named in conformance with the W4m convention of appending the name of each preprocessing tool to the input dataset name.
+* Superflous "Column that names the sample" input parameter was eliminated.
 * Some documentation was updated or clarified.
-* There are no functional changes.
 
 #### Internal modifications
 * None
@@ -157,6 +167,8 @@ The W4m Data Subset tool may be applied several times sequentially; for example,
 ## Citations
 
 Benjamini, Yoav and Hochberg, Yosef (1995) **Controlling the False Discovery Rate: A Practical and Powerful Approach to Multiple Testing.** In *Journal of the royal statistical society. Series B (Methodological), 1 (57), pp. pp. 289-300.* [http://www.jstor.org/stable/2346101](http://www.jstor.org/stable/2346101)
+
+Kuhl, Carsten and Tautenhahn, Ralf and BÃ¶ttcher, Christoph and Larson, Tony R. and Neumann, Steffen (2011). CAMERA: An Integrated Strategy for Compound Spectra Extraction and Annotation of Liquid Chromatography/Mass Spectrometry Data Sets. In Analytical Chemistry, 84 (1), pp. 283-289. [doi:10.1021/ac202450g][http://dx.doi.org/10.1021/ac202450g]
 
 Giacomoni, F. and Le Corguille, G. and Monsoor, M. and Landi, M. and Pericard, P. and Petera, M. and Duperier, C. and Tremblay-Franco, M. and Martin, J.-F. and Jacob, D. and et al. (2014). **Workflow4Metabolomics: a collaborative research infrastructure for computational metabolomics.** In *Bioinformatics, 31 (9), pp. 1493–1495.* [doi:10.1093/bioinformatics/btu813](http://dx.doi.org/10.1093/bioinformatics/btu813)
 

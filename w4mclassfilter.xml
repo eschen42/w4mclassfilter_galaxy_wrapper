@@ -26,6 +26,7 @@
   classnameColumn '$classnameColumn'
   samplenameColumn 'sampleMetadata'
   variable_range_filter '$variableRangeFilter'
+	transformation '$transformation'
   dataMatrix_out '$dataMatrix_out'
   sampleMetadata_out '$sampleMetadata_out'
   variableMetadata_out '$variableMetadata_out'
@@ -92,6 +93,10 @@
         </valid>
       </sanitizer>
     </param>
+    <param name="transformation" label="Data-transformation" type="select" help="'none' (the default) - do not transform data; 'log10' - log base 10 of data; in both cases, negative and missing values are imputed to zero">
+      <option value="none" selected="true">none</option>
+      <option value="log10">log10</option>
+    </param>
     
   </inputs>
   <outputs>
@@ -101,6 +106,60 @@
   </outputs>
 
   <tests>
+    <test>
+      <param name="dataMatrix_in" value="input_dataMatrix.tsv"/>
+      <param name="sampleMetadata_in" value="input_sampleMetadata.tsv"/>
+      <param name="variableMetadata_in" value="input_variableMetadata.tsv"/>
+      <param name="classnameColumn" value="gender"/>
+      <param name="sampleclassNames" value="M"/>
+      <param name="wildcards" value="FALSE"/>
+      <param name="inclusive" value="filter-in"/>
+      <param name="variableRangeFilter" value="FEATMAX:6.30103:,mz:200:,rt::800"/>
+      <param name="transformation" value="log10"/>
+      <output name="sampleMetadata_out">
+        <assert_contents>
+          <not_has_text text="HU_028" />
+          <not_has_text text="HU_051" />
+          <not_has_text text="HU_060" />
+          <not_has_text text="HU_110" />
+          <not_has_text text="HU_149" />
+          <not_has_text text="HU_152" />
+          <not_has_text text="HU_175" />
+          <not_has_text text="HU_178" />
+          <not_has_text text="HU_185" />
+          <not_has_text text="HU_204" />
+          <not_has_text text="HU_208" />
+          <has_text text="HU_017" />
+          <has_text text="HU_034" />
+          <has_text text="HU_078" />
+          <has_text text="HU_091" />
+          <has_text text="HU_093" />
+          <has_text text="HU_099" />
+          <has_text text="HU_130" />
+          <has_text text="HU_134" />
+          <has_text text="HU_138" />
+        </assert_contents>
+      </output>
+      <output name="variableMetadata_out">
+        <assert_contents>
+          <not_has_text text="HMDB00191" />
+          <has_text     text="HMDB00208" />
+          <not_has_text text="HMDB00251" />
+          <not_has_text text="HMDB00299" />
+          <not_has_text text="HMDB00512" />
+          <not_has_text text="HMDB00518" />
+          <not_has_text text="HMDB00715" />
+          <not_has_text text="HMDB00822" />
+          <has_text     text="HMDB01032" />
+          <has_text     text="HMDB01101.1" />
+          <not_has_text text="HMDB03193" />
+          <not_has_text text="HMDB04824" />
+          <not_has_text text="HMDB10348" />
+          <has_text     text="HMDB13189" />
+          <not_has_text text="HMDB59717" />
+        </assert_contents>
+      </output>
+    </test>
     <test>
       <param name="dataMatrix_in" value="input_dataMatrix.tsv"/>
       <param name="sampleMetadata_in" value="input_sampleMetadata.tsv"/>
@@ -458,6 +517,7 @@ This tool can perform several operations to reduce the number samples or feature
 This tool also performs several operations to address several data issues that may impede downstream statistical analysis:
 
 - Missing values in dataMatrix are imputed to zero.
+- The values in the dataMatrix may be log-transformed if desired.
 - Samples that are missing from either sampleMetadata or dataMatrix are eliminated.
 - Features that are missing from either variableMetadata or dataMatrix are eliminated.
 - Features and samples that have zero variance are eliminated.
@@ -475,7 +535,7 @@ Workflow Position
 
 This tool can be used at any point downstream of Preprocessing.
 
-- Possible upstream tool categories: Preprocessing, Quality Control, Statistical Analysis
+- Possible upstream tool categories: Preprocessing, Quality Control, Statistical Analysis, Filter and Sort
 - Possible downstream tool categories: Normalisation, Statistical Analysis, Quality Control, Filter and Sort
 
 -----------
@@ -531,12 +591,16 @@ Variable-range filters (default = no filters)
 	| comma-separated names of variable-range filters (see the 'Variable-range filters' section below)
 	|
 
+Data-transformation (default = '``none``')
+	| '``none``' - do not transform data matrix values
+	| '``log10``' - take the log base 10 of the values in the data matrix
+	| In both cases, negative and missing values are imputed to zero.
+	|
 
 
 ------------
 Output files
 ------------
-
 
 sampleMetadata
 	| (tabular separated values) file identical to the **sampleMetadata** file given as an input argument, excepting lacking rows for samples that have been filtered out (by the sample-class filter, or because of zero variance, or because they were missing in the input data matrix)
@@ -728,10 +792,10 @@ Changes in version 0.98.8
 
 New features
 
-- There are no functional changes.
-- Output datasets are named in conformance with the W4m convention of appending the name of each preprocessing tool to the input dataset name.
 - The tool now appears in Galaxy with a new, more representative name: "W4m Data Subset". (Earlier versions of this tool appeared in Galaxy with the name "Sample Subset".)
-- Eliminated superflous "Column that names the sample" input parameter.
+- Option was added to log-transform data matrix values.
+- Output datasets are named in conformance with the W4m convention of appending the name of each preprocessing tool to the input dataset name.
+- Superflous "Column that names the sample" input parameter was eliminated.
 - Some documentation was updated or clarified.
 
 Internal modifications

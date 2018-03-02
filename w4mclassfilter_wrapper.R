@@ -82,6 +82,7 @@ variableMetadata_out <- as.character(argVc["variableMetadata_out"])
 
 # other parameters
 
+transformation <- as.character(argVc["transformation"])
 wildcards <- as.logical(argVc["wildcards"])
 sampleclassNames <- as.character(argVc["sampleclassNames"])
 sampleclassNames <- strsplit(x = sampleclassNames, split = ",", fixed = TRUE)[[1]]
@@ -95,6 +96,29 @@ samplenameColumn <- as.character(argVc["samplenameColumn"])
 
 variable_range_filter <- as.character(argVc["variable_range_filter"])
 variable_range_filter <- strsplit(x = variable_range_filter, split = ",", fixed = TRUE)[[1]]
+
+## -----------------------------
+## Transformation and imputation
+## -----------------------------
+my_w4m_filter_imputation <- if (transformation == "log10") {
+  function(m) {
+    suppressWarnings(
+      # suppress warnings here since non-positive values will produce NaN's that will be fixed in the next step
+      m <- log10(m)
+    )
+    # replace NaN values with zero
+    m[is.nan(m)] <- 0
+    # replace NA values with zero
+    m[is.na(m)] <- 0
+    # replace negative values with zero, if applicable (It should never be applicable!)
+    m[m<0] <- 0
+    # return matrix as the result
+    return (m)
+  }
+} else {
+  # use the method from the w4mclassfilter class
+  w4m_filter_imputation
+}
 
 ##------------------------------
 ## Computation
@@ -113,6 +137,7 @@ result <- w4m_filter_by_sample_class(
 , samplename_column     = samplenameColumn
 , variable_range_filter = variable_range_filter
 , failure_action        = my_print
+, data_imputation       = my_w4m_filter_imputation
 )
 
 my_print("\nResult of '", modNamC, "' Galaxy module call to 'w4mclassfilter::w4m_filter_by_sample_class' R function: ",
