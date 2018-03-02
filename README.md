@@ -168,7 +168,7 @@ The W4m Data Subset tool may be applied several times sequentially; for example,
 
 Benjamini, Yoav and Hochberg, Yosef (1995) **Controlling the False Discovery Rate: A Practical and Powerful Approach to Multiple Testing.** In *Journal of the royal statistical society. Series B (Methodological), 1 (57), pp. pp. 289-300.* [http://www.jstor.org/stable/2346101](http://www.jstor.org/stable/2346101)
 
-Kuhl, Carsten and Tautenhahn, Ralf and Böttcher, Christoph and Larson, Tony R. and Neumann, Steffen (2011). CAMERA: An Integrated Strategy for Compound Spectra Extraction and Annotation of Liquid Chromatography/Mass Spectrometry Data Sets. In Analytical Chemistry, 84 (1), pp. 283-289. [doi:10.1021/ac202450g](http://dx.doi.org/10.1021/ac202450g)
+Kuhl, Carsten and Tautenhahn, Ralf and Böttcher, Christoph and Larson, Tony R. and Neumann, Steffen (2011). **CAMERA: An Integrated Strategy for Compound Spectra Extraction and Annotation of Liquid Chromatography/Mass Spectrometry Data Sets.** In *Analytical Chemistry, 84 (1), pp. 283-289.* [doi:10.1021/ac202450g](http://dx.doi.org/10.1021/ac202450g)
 
 Giacomoni, F. and Le Corguille, G. and Monsoor, M. and Landi, M. and Pericard, P. and Petera, M. and Duperier, C. and Tremblay-Franco, M. and Martin, J.-F. and Jacob, D. and et al. (2014). **Workflow4Metabolomics: a collaborative research infrastructure for computational metabolomics.** In *Bioinformatics, 31 (9), pp. 1493–1495.* [doi:10.1093/bioinformatics/btu813](http://dx.doi.org/10.1093/bioinformatics/btu813)
 
