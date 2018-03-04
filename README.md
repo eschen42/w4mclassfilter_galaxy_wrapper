@@ -99,6 +99,7 @@ The W4m Data Subset tool may be applied several times sequentially; for example,
   - comma-separated filters, each specified as 'variableMetadataColumnName:min:max'; default is no filters
 - Data transformation (default = 'none')
   - *none* - do not transform data matrix values
+  - *log2* - take the log base 2 of the values in the data matrix
   - *log10* - take the log base 10 of the values in the data matrix
   - In both cases, negative and missing values are imputed to zero.
 

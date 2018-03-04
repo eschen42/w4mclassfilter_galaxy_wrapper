@@ -93,8 +93,9 @@
         </valid>
       </sanitizer>
     </param>
-    <param name="transformation" label="Data-transformation" type="select" help="'none' (the default) - do not transform data; 'log10' - log base 10 of data; in both cases, negative and missing values are imputed to zero">
+    <param name="transformation" label="Data-transformation" type="select" help="'none' (the default) - do not transform data; 'log2' - log base 2 of data; 'log10' - log base 10 of data; in all cases, negative and missing values are imputed to zero">
       <option value="none" selected="true">none</option>
+      <option value="log2">log2</option>
       <option value="log10">log10</option>
     </param>
     
@@ -116,6 +117,11 @@
       <param name="inclusive" value="filter-in"/>
       <param name="variableRangeFilter" value="FEATMAX:6.30103:,mz:200:,rt::800"/>
       <param name="transformation" value="log10"/>
+      <output name="dataMatrix_out">
+        <assert_contents>
+          <has_text text="5.87336711011293" />
+        </assert_contents>
+      </output>
       <output name="sampleMetadata_out">
         <assert_contents>
           <not_has_text text="HU_028" />
@@ -168,7 +174,13 @@
       <param name="sampleclassNames" value=""/>
       <param name="wildcards" value="FALSE"/>
       <param name="inclusive" value="filter-out"/>
-      <param name="variableRangeFilter" value="FEATMAX:2e6:,mz:200:,rt::800"/>
+      <param name="variableRangeFilter" value="FEATMAX:20.93157:,mz:200:,rt::800"/>
+      <param name="transformation" value="log2"/>
+      <output name="dataMatrix_out">
+        <assert_contents>
+          <has_text text="19.5109032146715" />
+        </assert_contents>
+      </output>
       <output name="sampleMetadata_out">
         <assert_contents>
           <has_text text="HU_028" />
@@ -220,6 +232,7 @@
       <param name="classnameColumn" value="gender"/>
       <param name="sampleclassNames" value="M"/>
       <param name="inclusive" value="filter-in"/>
+      <param name="transformation" value="none"/>
       <output name="dataMatrix_out">
         <assert_contents>
           <not_has_text text="HU_028" />
@@ -593,6 +606,7 @@ Variable-range filters (default = no filters)
 
 Data-transformation (default = '``none``')
 	| '``none``' - do not transform data matrix values
+	| '``log2``' - take the log base 2 of the values in the data matrix
 	| '``log10``' - take the log base 10 of the values in the data matrix
 	| In both cases, negative and missing values are imputed to zero.
 	|
@@ -724,15 +738,19 @@ This example retains only samples whose 'gender' attribute is 'M'.
 
 **Input parameters**
 
-+------------------------------------+-----------------+
-| Input Parameter                    | Value           |
-+====================================+=================+
-| Names of sample-classes            | M               |
-+------------------------------------+-----------------+
-| Include named classes              | filter-in       |
-+------------------------------------+-----------------+
-| Column that names the sample-class | gender          |
-+------------------------------------+-----------------+
++------------------------------------+-------------------------------+
+| Input Parameter                    | Value                         |
++====================================+===============================+
+| Names of sample-classes            | M                             |
++------------------------------------+-------------------------------+
+| Include named classes              | filter-in                     |
++------------------------------------+-------------------------------+
+| Column that names the sample-class | gender                        |
++------------------------------------+-------------------------------+
+| Variable range-filters             | (Leave this field empty.)     |
++------------------------------------+-------------------------------+
+| Data transforamtion                | none                          |
++------------------------------------+-------------------------------+
 
 **Expected outputs**
 
@@ -757,17 +775,19 @@ This example retains all samples (except those having zero variance for all feat
 
 **Input parameters**
 
-+------------------------------------+-------------------------------+
-| Input Parameter                    | Value                         |
-+====================================+===============================+
-| Names of sample-classes            | (Leave this field empty.)     |
-+------------------------------------+-------------------------------+
-| Include named classes              | filter-out                    |
-+------------------------------------+-------------------------------+
-| Column that names the sample-class | class                         |
-+------------------------------------+-------------------------------+
-| Variable range-filters             | FEATMAX:2e6:,mz:200:,rt::800  |
-+------------------------------------+-------------------------------+
++------------------------------------+------------------------------------+
+| Input Parameter                    | Value                              |
++====================================+====================================+
+| Names of sample-classes            | (Leave this field empty.)          |
++------------------------------------+------------------------------------+
+| Include named classes              | filter-out                         |
++------------------------------------+------------------------------------+
+| Column that names the sample-class | gender                             |
++------------------------------------+------------------------------------+
+| Variable range-filters             | FEATMAX:20.93157:,mz:200:,rt::800  |
++------------------------------------+------------------------------------+
+| Data transforamtion                | log2                               |
++------------------------------------+------------------------------------+
 
 **Expected outputs**
 
