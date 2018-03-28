@@ -1,4 +1,4 @@
-<tool id="w4mclassfilter" name="W4m Data Subset" version="0.98.8">
+<tool id="w4mclassfilter" name="W4m Data Subset" version="0.98.9">
   <description>Filter W4m data by values or metadata</description>
 
   <!-- Here is the hyphenation standard that I *try* to apply consistently in my documentation: http://www.sandranoonan.com/dont-let-hyphenation-drive-crazy/ -->
@@ -57,6 +57,7 @@
           <add value="&#41;"  /> <!-- right-paren -->
           <add value="&#42;"  /> <!-- splat, asterisk -->
           <add value="&#43;"  /> <!-- plus -->
+          <add value="&#45;"  /> <!-- dash, hyphen -->
           <add value="&#44;"  /> <!-- comma -->
           <add value="&#46;"  /> <!-- dot, period -->
           <add value="&#58;"  /> <!-- colon -->
@@ -105,8 +106,8 @@
       <param name="dataMatrix_in" value="input_dataMatrix.tsv"/>
       <param name="sampleMetadata_in" value="input_sampleMetadata.tsv"/>
       <param name="variableMetadata_in" value="input_variableMetadata.tsv"/>
-      <param name="classnameColumn" value="class"/>
-      <param name="sampleclassNames" value=""/>
+      <param name="classnameColumn" value="sampleMetadata"/>
+      <param name="sampleclassNames" value="HU_[0-9][0-9][0-9]"/>
       <param name="wildcards" value="FALSE"/>
       <param name="inclusive" value="filter-out"/>
       <param name="variableRangeFilter" value="FEATMAX:2e6:,mz:200:,rt::800"/>
@@ -722,6 +723,17 @@ This example retains all samples (except those having zero variance for all feat
 ----
 NEWS
 ----
+
+Changes in version 0.98.9
+=========================
+
+New features
+
+- Fixed bug.
+
+Internal modifications
+
+- Added the hyphen to the characters permitted within regular expressions.
 
 Changes in version 0.98.8
 =========================
