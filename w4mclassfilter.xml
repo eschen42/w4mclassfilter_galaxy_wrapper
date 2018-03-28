@@ -172,7 +172,7 @@
       <param name="sampleMetadata_in" value="input_sampleMetadata.tsv"/>
       <param name="variableMetadata_in" value="input_variableMetadata.tsv"/>
       <param name="classnameColumn" value="sampleMetadata"/>
-      <!-- test that hypens in regular expressions work -->
+      <!-- test that hyphens in regular expressions work -->
       <param name="sampleclassNames" value="HU_[0-9][0-9][0-9]"/>
       <param name="wildcards" value="FALSE"/>
       <param name="inclusive" value="filter-in"/>
