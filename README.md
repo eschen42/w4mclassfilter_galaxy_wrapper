@@ -114,6 +114,14 @@ The W4m Data Subset tool may be applied several times sequentially; for example,
 
 ## NEWS
 
+### Changes in version 0.98.9
+
+#### New features
+* none
+
+#### Internal modifications
+* Added missing support for hyphen character in regular expressions
+
 ### Changes in version 0.98.8
 
 #### New features
