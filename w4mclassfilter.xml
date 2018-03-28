@@ -112,10 +112,6 @@
       <param name="dataMatrix_in" value="input_dataMatrix.tsv"/>
       <param name="sampleMetadata_in" value="input_sampleMetadata.tsv"/>
       <param name="variableMetadata_in" value="input_variableMetadata.tsv"/>
-<<<<<<< HEAD
-      <param name="classnameColumn" value="sampleMetadata"/>
-      <param name="sampleclassNames" value="HU_[0-9][0-9][0-9]"/>
-=======
       <param name="classnameColumn" value="gender"/>
       <param name="sampleclassNames" value="M"/>
       <param name="wildcards" value="FALSE"/>
@@ -175,11 +171,11 @@
       <param name="dataMatrix_in" value="input_dataMatrix.tsv"/>
       <param name="sampleMetadata_in" value="input_sampleMetadata.tsv"/>
       <param name="variableMetadata_in" value="input_variableMetadata.tsv"/>
-      <param name="classnameColumn" value="class"/>
-      <param name="sampleclassNames" value=""/>
->>>>>>> 7b824bc01884125dc8bb2e4c9ef70fb0a6d88db1
+      <param name="classnameColumn" value="sampleMetadata"/>
+      <!-- test that hypens in regular expressions work -->
+      <param name="sampleclassNames" value="HU_[0-9][0-9][0-9]"/>
       <param name="wildcards" value="FALSE"/>
-      <param name="inclusive" value="filter-out"/>
+      <param name="inclusive" value="filter-in"/>
       <param name="variableRangeFilter" value="FEATMAX:20.93157:,mz:200:,rt::800"/>
       <param name="transformation" value="log2"/>
       <output name="dataMatrix_out">
