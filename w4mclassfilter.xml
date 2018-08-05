@@ -1,476 +1,478 @@
-<tool id="w4mclassfilter" name="W4m Data Subset" version="0.98.9">
-  <description>Filter W4m data by values or metadata</description>
-
-  <!-- Here is the hyphenation standard that I *try* to apply consistently in my documentation: http://www.sandranoonan.com/dont-let-hyphenation-drive-crazy/ -->
-
-  <requirements>
-    <!-- <requirement type="package" version="6.2">readline</requirement> -->
-    <requirement type="package" version="3.4.1">r-base</requirement>
-    <requirement type="package" version="1.1_4">r-batch</requirement>
-    <requirement type="package" version="0.98.7">w4mclassfilter</requirement>
-  </requirements>
-
-  <stdio>
-    <exit_code range="1:" level="fatal" />
-  </stdio>
-
-
-  <command detect_errors="aggressive"><![CDATA[
-  Rscript $__tool_directory__/w4mclassfilter_wrapper.R
-  dataMatrix_in '$dataMatrix_in'
-  sampleMetadata_in '$sampleMetadata_in'
-  variableMetadata_in '$variableMetadata_in'
-  sampleclassNames '$sampleclassNames'
-  inclusive '$inclusive'
-  wildcards '$wildcards'
-  classnameColumn '$classnameColumn'
-  samplenameColumn 'sampleMetadata'
-  variable_range_filter '$variableRangeFilter'
-	transformation '$transformation'
-  dataMatrix_out '$dataMatrix_out'
-  sampleMetadata_out '$sampleMetadata_out'
-  variableMetadata_out '$variableMetadata_out'
-  ]]></command>
-
-  <inputs>
-    <param name="dataMatrix_in" label="Data matrix file" type="data" format="tabular" help="variable x sample, decimal: '.', missing: NA, mode: numerical, separator: tab" />
-    <param name="sampleMetadata_in" label="Sample metadata file" type="data" format="tabular" help="sample x metadata columns, separator: tab" />
-    <param name="variableMetadata_in" label="Variable metadata file" type="data" format="tabular" help="variable x metadata columns, separator: tab" />
-    <param name="classnameColumn" label="Column that names the sample-class" type="text" value = "class" help="name of the column in sample metadata that has the values to be tested against the 'Names of sample-classes' input parameter - defaults to 'class'">
-      <sanitizer>
-        <valid initial="string.letters">
-          <add preset="string.digits"/>
-          <add value="&#45;"  /> <!-- dash, hyphen -->
-          <add value="&#46;"  /> <!-- dot, period -->
-          <add value="&#95;"  /> <!-- underscore -->
-        </valid>
-      </sanitizer>
-    </param>
-    <param name="sampleclassNames" label="Names of sample-classes" type="text" value = "" help="comma-separated names (or regular expressions to match names) of sample-classes to filter in or out; defaults to no names">
-      <sanitizer>
-        <valid initial="string.letters">
-          <add preset="string.digits"/>
-          <add value="&#123;" /> <!-- l-cube, left-curly-bracket -->
-          <add value="&#124;" /> <!-- pipe -->
-          <add value="&#125;" /> <!-- r-cube, right-curly-bracket -->
-          <add value="&#36;"  /> <!-- dollar, dollar-sign -->
-          <add value="&#40;"  /> <!-- left-paren -->
-          <add value="&#41;"  /> <!-- right-paren -->
-          <add value="&#42;"  /> <!-- splat, asterisk -->
-          <add value="&#43;"  /> <!-- plus -->
-          <add value="&#45;"  /> <!-- dash, hyphen -->
-          <add value="&#44;"  /> <!-- comma -->
-          <add value="&#46;"  /> <!-- dot, period -->
-          <add value="&#58;"  /> <!-- colon -->
-          <add value="&#59;"  /> <!-- semi, semicolon -->
-          <add value="&#63;"  /> <!-- what, question mark -->
-          <add value="&#91;"  /> <!-- l-squib, left-squre-bracket -->
-          <add value="&#92;"  /> <!-- whack, backslash -->
-          <add value="&#93;"  /> <!-- r-squib, right-squre-bracket -->
-          <add value="&#94;"  /> <!-- hat, caret -->
-          <add value="&#95;"  /> <!-- underscore -->
-        </valid>
-      </sanitizer>
-    </param>
-
-    <param name="wildcards" label="Use 'wild cards' or 'regular expressions'" type="select" help="'wild-cards' (the default) - use '*' and '?' to match class names; 'regular-expressions' - use regular expressions to match class names">
-      <option value="TRUE" selected="true">wild-cards</option>
-      <option value="FALSE">regular-expressions</option>
-    </param>
-    <param name="inclusive" label="Exclude/include named classes" type="select" help="'filter-out' (the default) - exclude only the named sample-classes; 'filter-in' - include only the named sample-classes">
-      <option value="TRUE">filter-in</option>
-      <option value="FALSE" selected="true">filter-out</option>
-    </param>
-    
-    <param name="variableRangeFilter" label="Variable-range filters" type="text" value = "" help="comma-separated filters, each specified as 'variableMetadataColumnName:min:max'; default is no filters.  (See help below.)">
-      <sanitizer>
-        <valid initial="string.letters">
-          <add preset="string.digits"/>
-          <add value="&#44;"  /> <!-- comma -->
-          <add value="&#45;"  /> <!-- dash, hyphen -->
-          <add value="&#46;"  /> <!-- dot, period -->
-          <add value="&#58;"  /> <!-- colon -->
-          <add value="&#95;"  /> <!-- underscore -->
-        </valid>
-      </sanitizer>
-    </param>
-    <param name="transformation" label="Data-transformation" type="select" help="'none' (the default) - do not transform data; 'log2' - log base 2 of data; 'log10' - log base 10 of data; in all cases, negative and missing values are imputed to zero">
-      <option value="none" selected="true">none</option>
-      <option value="log2">log2</option>
-      <option value="log10">log10</option>
-    </param>
-    
-  </inputs>
-  <outputs>
-    <data name="dataMatrix_out" label="${dataMatrix_in.name}.subset" format="tabular" ></data>
-    <data name="sampleMetadata_out" label="${sampleMetadata_in.name}.subset" format="tabular" ></data>
-    <data name="variableMetadata_out" label="${variableMetadata_in.name}.subset" format="tabular" ></data>
-  </outputs>
-
-  <tests>
-    <test>
-      <param name="dataMatrix_in" value="input_dataMatrix.tsv"/>
-      <param name="sampleMetadata_in" value="input_sampleMetadata.tsv"/>
-      <param name="variableMetadata_in" value="input_variableMetadata.tsv"/>
-      <param name="classnameColumn" value="gender"/>
-      <param name="sampleclassNames" value="M"/>
-      <param name="wildcards" value="FALSE"/>
-      <param name="inclusive" value="filter-in"/>
-      <param name="variableRangeFilter" value="FEATMAX:6.30103:,mz:200:,rt::800"/>
-      <param name="transformation" value="log10"/>
-      <output name="dataMatrix_out">
-        <assert_contents>
-          <has_text text="5.87336711011293" />
-        </assert_contents>
-      </output>
-      <output name="sampleMetadata_out">
-        <assert_contents>
-          <not_has_text text="HU_028" />
-          <not_has_text text="HU_051" />
-          <not_has_text text="HU_060" />
-          <not_has_text text="HU_110" />
-          <not_has_text text="HU_149" />
-          <not_has_text text="HU_152" />
-          <not_has_text text="HU_175" />
-          <not_has_text text="HU_178" />
-          <not_has_text text="HU_185" />
-          <not_has_text text="HU_204" />
-          <not_has_text text="HU_208" />
-          <has_text text="HU_017" />
-          <has_text text="HU_034" />
-          <has_text text="HU_078" />
-          <has_text text="HU_091" />
-          <has_text text="HU_093" />
-          <has_text text="HU_099" />
-          <has_text text="HU_130" />
-          <has_text text="HU_134" />
-          <has_text text="HU_138" />
-        </assert_contents>
-      </output>
-      <output name="variableMetadata_out">
-        <assert_contents>
-          <not_has_text text="HMDB00191" />
-          <has_text     text="HMDB00208" />
-          <not_has_text text="HMDB00251" />
-          <not_has_text text="HMDB00299" />
-          <not_has_text text="HMDB00512" />
-          <not_has_text text="HMDB00518" />
-          <not_has_text text="HMDB00715" />
-          <not_has_text text="HMDB00822" />
-          <has_text     text="HMDB01032" />
-          <has_text     text="HMDB01101.1" />
-          <not_has_text text="HMDB03193" />
-          <not_has_text text="HMDB04824" />
-          <not_has_text text="HMDB10348" />
-          <has_text     text="HMDB13189" />
-          <not_has_text text="HMDB59717" />
-        </assert_contents>
-      </output>
-    </test>
-    <test>
-      <param name="dataMatrix_in" value="input_dataMatrix.tsv"/>
-      <param name="sampleMetadata_in" value="input_sampleMetadata.tsv"/>
-      <param name="variableMetadata_in" value="input_variableMetadata.tsv"/>
-      <param name="classnameColumn" value="sampleMetadata"/>
-      <!-- test that hyphens in regular expressions work -->
-      <param name="sampleclassNames" value="HU_[0-9][0-9][0-9]"/>
-      <param name="wildcards" value="FALSE"/>
-      <param name="inclusive" value="filter-in"/>
-      <param name="variableRangeFilter" value="FEATMAX:20.93157:,mz:200:,rt::800"/>
-      <param name="transformation" value="log2"/>
-      <output name="dataMatrix_out">
-        <assert_contents>
-          <has_text text="19.5109032146715" />
-        </assert_contents>
-      </output>
-      <output name="sampleMetadata_out">
-        <assert_contents>
-          <has_text text="HU_028" />
-          <has_text text="HU_051" />
-          <has_text text="HU_060" />
-          <has_text text="HU_110" />
-          <has_text text="HU_149" />
-          <has_text text="HU_152" />
-          <has_text text="HU_175" />
-          <has_text text="HU_178" />
-          <has_text text="HU_185" />
-          <not_has_text text="HU_204" />
-          <has_text text="HU_208" />
-          <has_text text="HU_017" />
-          <has_text text="HU_034" />
-          <has_text text="HU_078" />
-          <has_text text="HU_091" />
-          <has_text text="HU_093" />
-          <has_text text="HU_099" />
-          <has_text text="HU_130" />
-          <has_text text="HU_134" />
-          <has_text text="HU_138" />
-        </assert_contents>
-      </output>
-      <output name="variableMetadata_out">
-        <assert_contents>
-          <has_text     text="HMDB00191" />
-          <has_text     text="HMDB00208" />
-          <not_has_text text="HMDB00251" />
-          <not_has_text text="HMDB00299" />
-          <not_has_text text="HMDB00512" />
-          <not_has_text text="HMDB00518" />
-          <not_has_text text="HMDB00715" />
-          <not_has_text text="HMDB00822" />
-          <has_text     text="HMDB01032" />
-          <has_text     text="HMDB01101.1" />
-          <not_has_text text="HMDB03193" />
-          <not_has_text text="HMDB04824" />
-          <not_has_text text="HMDB10348" />
-          <has_text     text="HMDB13189" />
-          <not_has_text text="HMDB59717" />
-        </assert_contents>
-      </output>
-    </test>
-    <test>
-      <param name="dataMatrix_in" value="input_dataMatrix.tsv"/>
-      <param name="sampleMetadata_in" value="input_sampleMetadata.tsv"/>
-      <param name="variableMetadata_in" value="input_variableMetadata.tsv"/>
-      <param name="classnameColumn" value="gender"/>
-      <param name="sampleclassNames" value="M"/>
-      <param name="inclusive" value="filter-in"/>
-      <param name="transformation" value="none"/>
-      <output name="dataMatrix_out">
-        <assert_contents>
-          <not_has_text text="HU_028" />
-          <not_has_text text="HU_051" />
-          <not_has_text text="HU_060" />
-          <not_has_text text="HU_110" />
-          <not_has_text text="HU_149" />
-          <not_has_text text="HU_152" />
-          <not_has_text text="HU_175" />
-          <not_has_text text="HU_178" />
-          <not_has_text text="HU_185" />
-          <not_has_text text="HU_204" />
-          <not_has_text text="HU_208" />
-          <has_text     text="HU_017" />
-          <has_text     text="HU_034" />
-          <has_text     text="HU_078" />
-          <has_text     text="HU_091" />
-          <has_text     text="HU_093" />
-          <has_text     text="HU_099" />
-          <has_text     text="HU_130" />
-          <has_text     text="HU_134" />
-          <has_text     text="HU_138" />
-          <has_text     text="HMDB03193" />
-          <not_has_text text="HMDB00822" />
-          <has_text     text="HMDB01101" />
-          <has_text     text="HMDB01101.1" />
-          <has_text     text="HMDB10348" />
-          <has_text     text="HMDB59717" />
-          <has_text     text="HMDB13189" />
-          <has_text     text="HMDB00299" />
-          <has_text     text="HMDB00191" />
-          <has_text     text="HMDB00518" />
-          <has_text     text="HMDB00715" />
-          <has_text     text="HMDB01032" />
-          <has_text     text="HMDB00208" />
-          <has_text     text="HMDB04824" />
-          <has_text     text="HMDB00512" />
-          <has_text     text="HMDB00251" />
-        </assert_contents>
-      </output>
-    </test>
-    <test>
-      <param name="dataMatrix_in" value="input_dataMatrix.tsv"/>
-      <param name="sampleMetadata_in" value="input_sampleMetadata.tsv"/>
-      <param name="variableMetadata_in" value="input_variableMetadata.tsv"/>
-      <param name="classnameColumn" value="gender"/>
-      <param name="sampleclassNames" value="*"/>
-      <param name="wildcards" value="TRUE"/>
-      <param name="inclusive" value="filter-in"/>
-      <output name="sampleMetadata_out">
-        <assert_contents>
-          <not_has_text text="HU_204" />
-          <has_text text="HU_028" />
-          <has_text text="HU_051" />
-          <has_text text="HU_060" />
-          <has_text text="HU_110" />
-          <has_text text="HU_149" />
-          <has_text text="HU_152" />
-          <has_text text="HU_175" />
-          <has_text text="HU_178" />
-          <has_text text="HU_185" />
-          <has_text text="HU_208" />
-          <has_text text="HU_017" />
-          <has_text text="HU_034" />
-          <has_text text="HU_078" />
-          <has_text text="HU_091" />
-          <has_text text="HU_093" />
-          <has_text text="HU_099" />
-          <has_text text="HU_130" />
-          <has_text text="HU_134" />
-          <has_text text="HU_138" />
-        </assert_contents>
-      </output>
-    </test>
-    <test>
-      <param name="dataMatrix_in" value="input_dataMatrix.tsv"/>
-      <param name="sampleMetadata_in" value="input_sampleMetadata.tsv"/>
-      <param name="variableMetadata_in" value="input_variableMetadata.tsv"/>
-      <param name="classnameColumn" value="gender"/>
-      <param name="sampleclassNames" value="M"/>
-      <param name="wildcards" value="FALSE"/>
-      <param name="inclusive" value="filter-in"/>
-      <output name="sampleMetadata_out">
-        <assert_contents>
-          <not_has_text text="HU_028" />
-          <not_has_text text="HU_051" />
-          <not_has_text text="HU_060" />
-          <not_has_text text="HU_110" />
-          <not_has_text text="HU_149" />
-          <not_has_text text="HU_152" />
-          <not_has_text text="HU_175" />
-          <not_has_text text="HU_178" />
-          <not_has_text text="HU_185" />
-          <not_has_text text="HU_204" />
-          <not_has_text text="HU_208" />
-          <has_text     text="HU_017" />
-          <has_text     text="HU_034" />
-          <has_text     text="HU_078" />
-          <has_text     text="HU_091" />
-          <has_text     text="HU_093" />
-          <has_text     text="HU_099" />
-          <has_text     text="HU_130" />
-          <has_text     text="HU_134" />
-          <has_text     text="HU_138" />
-        </assert_contents>
-      </output>
-    </test>
-    <test>
-      <param name="dataMatrix_in" value="input_dataMatrix.tsv"/>
-      <param name="sampleMetadata_in" value="input_sampleMetadata.tsv"/>
-      <param name="variableMetadata_in" value="input_variableMetadata.tsv"/>
-      <param name="classnameColumn" value="gender"/>
-      <param name="sampleclassNames" value="M"/>
-      <param name="wildcards" value="FALSE"/>
-      <param name="inclusive" value="filter-in"/>
-      <output name="variableMetadata_out">
-        <assert_contents>
-          <has_text     text="HMDB03193" />
-          <not_has_text text="HMDB00822" />
-          <has_text     text="HMDB01101" />
-          <has_text     text="HMDB01101.1" />
-          <has_text     text="HMDB10348" />
-          <has_text     text="HMDB59717" />
-          <has_text     text="HMDB13189" />
-          <has_text     text="HMDB00299" />
-          <has_text     text="HMDB00191" />
-          <has_text     text="HMDB00518" />
-          <has_text     text="HMDB00715" />
-          <has_text     text="HMDB01032" />
-          <has_text     text="HMDB00208" />
-          <has_text     text="HMDB04824" />
-          <has_text     text="HMDB00512" />
-          <has_text     text="HMDB00251" />
-        </assert_contents>
-      </output>
-    </test>
-    <test>
-      <param name="dataMatrix_in" value="input_nofilter_dataMatrix.tsv"/>
-      <param name="sampleMetadata_in" value="input_sampleMetadata.tsv"/>
-      <param name="variableMetadata_in" value="input_variableMetadata.tsv"/>
-      <param name="classnameColumn" value="gender"/>
-      <param name="sampleclassNames" value="M"/>
-      <param name="wildcards" value="FALSE"/>
-      <param name="inclusive" value="filter-in"/>
-      <output name="variableMetadata_out">
-        <assert_contents>
-          <has_text     text="HMDB03193" />
-          <not_has_text text="HMDB00822" />
-          <has_text     text="HMDB01101" />
-          <has_text     text="HMDB01101.1" />
-          <has_text     text="HMDB10348" />
-          <has_text     text="HMDB59717" />
-          <not_has_text text="HMDB13189" />
-          <has_text     text="HMDB00299" />
-          <has_text     text="HMDB00191" />
-          <has_text     text="HMDB00518" />
-          <has_text     text="HMDB00715" />
-          <has_text     text="HMDB01032" />
-          <has_text     text="HMDB00208" />
-          <has_text     text="HMDB04824" />
-          <has_text     text="HMDB00512" />
-          <has_text     text="HMDB00251" />
-        </assert_contents>
-      </output>
-    </test>
-    <test>
-      <param name="dataMatrix_in" value="input_dataMatrix.tsv"/>
-      <param name="sampleMetadata_in" value="input_sampleMetadata.tsv"/>
-      <param name="variableMetadata_in" value="input_variableMetadata.tsv"/>
-      <param name="classnameColumn" value="gender"/>
-      <param name="sampleclassNames" value="[Mm],[fF]"/>
-      <param name="wildcards" value="FALSE"/>
-      <param name="inclusive" value="filter-in"/>
-      <output name="sampleMetadata_out">
-        <assert_contents>
-          <has_text text="HU_028" />
-          <has_text text="HU_051" />
-          <has_text text="HU_060" />
-          <has_text text="HU_110" />
-          <has_text text="HU_149" />
-          <has_text text="HU_152" />
-          <has_text text="HU_175" />
-          <has_text text="HU_178" />
-          <has_text text="HU_185" />
-          <not_has_text text="HU_204" />
-          <has_text text="HU_208" />
-          <has_text text="HU_017" />
-          <has_text text="HU_034" />
-          <has_text text="HU_078" />
-          <has_text text="HU_091" />
-          <has_text text="HU_093" />
-          <has_text text="HU_099" />
-          <has_text text="HU_130" />
-          <has_text text="HU_134" />
-          <has_text text="HU_138" />
-        </assert_contents>
-      </output>
-    </test>
-    <test>
-      <param name="dataMatrix_in" value="input_dataMatrix.tsv"/>
-      <param name="sampleMetadata_in" value="input_sampleMetadata.tsv"/>
-      <param name="variableMetadata_in" value="input_variableMetadata.tsv"/>
-      <param name="classnameColumn" value=""/>
-      <param name="sampleclassNames" value="M"/>
-      <param name="wildcards" value="FALSE"/>
-      <param name="inclusive" value="filter-in"/>
-      <output name="sampleMetadata_out">
-        <assert_contents>
-          <has_text text="HU_028" />
-          <has_text text="HU_051" />
-          <has_text text="HU_060" />
-          <has_text text="HU_110" />
-          <has_text text="HU_149" />
-          <has_text text="HU_152" />
-          <has_text text="HU_175" />
-          <has_text text="HU_178" />
-          <has_text text="HU_185" />
-          <not_has_text text="HU_204" />
-          <has_text text="HU_208" />
-          <has_text text="HU_017" />
-          <has_text text="HU_034" />
-          <has_text text="HU_078" />
-          <has_text text="HU_091" />
-          <has_text text="HU_093" />
-          <has_text text="HU_099" />
-          <has_text text="HU_130" />
-          <has_text text="HU_134" />
-          <has_text text="HU_138" />
-        </assert_contents>
-      </output>
-    </test>
-  </tests>
-
-
-
-  <help><![CDATA[
+<tool id="w4mclassfilter" name="W4m Data Subset" version="0.98.10">
+    <description>Filter W4m data by values or metadata</description>
+    <!-- Here is the hyphenation standard that I *try* to apply consistently in my documentation: http://www.sandranoonan.com/dont-let-hyphenation-drive-crazy/ -->
+    <requirements>
+        <!-- <requirement type="package" version="6.2">readline</requirement> -->
+        <requirement type="package" version="3.4.1">r-base</requirement>
+        <requirement type="package" version="1.1_4">r-batch</requirement>
+        <requirement type="package" version="0.98.7">w4mclassfilter</requirement>
+    </requirements>
+    <command detect_errors="aggressive"><![CDATA[
+    Rscript $__tool_directory__/w4mclassfilter_wrapper.R
+    dataMatrix_in '$dataMatrix_in'
+    sampleMetadata_in '$sampleMetadata_in'
+    variableMetadata_in '$variableMetadata_in'
+    sampleclassNames '$sampleclassNames'
+    inclusive '$inclusive'
+    wildcards '$wildcards'
+    classnameColumn '$classnameColumn'
+    samplenameColumn 'sampleMetadata'
+    variable_range_filter '$variableRangeFilter'
+    transformation '$transformation'
+    dataMatrix_out '$dataMatrix_out'
+    sampleMetadata_out '$sampleMetadata_out'
+    variableMetadata_out '$variableMetadata_out'
+    ]]></command>
+    <inputs>
+        <param name="dataMatrix_in" format="tabular" label="Data matrix file" type="data"
+            help="variable x sample, decimal: '.', missing: NA, mode: numerical, separator: tab" />
+        <param name="sampleMetadata_in" format="tabular" label="Sample metadata file" type="data"
+            help="sample x metadata columns, separator: tab" />
+        <param name="variableMetadata_in" format="tabular" label="Variable metadata file" type="data"
+            help="variable x metadata columns, separator: tab" />
+        <param name="classnameColumn" label="Column that names the sample-class" type="text" value = "class"
+            help="name of the column in sample metadata that has the values to be tested against the 'Names of sample-classes' input parameter - defaults to 'class'">
+            <sanitizer>
+                <valid initial="string.letters">
+                    <add preset="string.digits"/>
+                    <add value="&#45;"    /> <!-- dash, hyphen -->
+                    <add value="&#46;"    /> <!-- dot, period -->
+                    <add value="&#95;"    /> <!-- underscore -->
+                </valid>
+            </sanitizer>
+        </param>
+        <param name="sampleclassNames" label="Names of sample-classes" type="text" value = ""
+            help="comma-separated names (or regular expressions to match names) of sample-classes to filter in or out; defaults to no names">
+            <sanitizer>
+                <valid initial="string.letters">
+                    <add preset="string.digits"/>
+                    <add value="&#123;"   /> <!-- l-cube, left-curly-bracket -->
+                    <add value="&#124;"   /> <!-- pipe -->
+                    <add value="&#125;"   /> <!-- r-cube, right-curly-bracket -->
+                    <add value="&#36;"    /> <!-- dollar, dollar-sign -->
+                    <add value="&#40;"    /> <!-- left-paren -->
+                    <add value="&#41;"    /> <!-- right-paren -->
+                    <add value="&#42;"    /> <!-- splat, asterisk -->
+                    <add value="&#43;"    /> <!-- plus -->
+                    <add value="&#45;"    /> <!-- dash, hyphen -->
+                    <add value="&#44;"    /> <!-- comma -->
+                    <add value="&#46;"    /> <!-- dot, period -->
+                    <add value="&#58;"    /> <!-- colon -->
+                    <add value="&#59;"    /> <!-- semi, semicolon -->
+                    <add value="&#63;"    /> <!-- what, question mark -->
+                    <add value="&#91;"    /> <!-- l-squib, left-squre-bracket -->
+                    <add value="&#92;"    /> <!-- whack, backslash -->
+                    <add value="&#93;"    /> <!-- r-squib, right-squre-bracket -->
+                    <add value="&#94;"    /> <!-- hat, caret -->
+                    <add value="&#95;"    /> <!-- underscore -->
+                </valid>
+            </sanitizer>
+        </param>
+        <param name="wildcards" label="Use 'wild cards' or 'regular expressions'" type="select"
+            help="'wild-cards' (the default) - use '*' and '?' to match class names; 'regular-expressions' - use regular expressions to match class names">
+            <option value="TRUE" selected="true">wild-cards</option>
+            <option value="FALSE">regular-expressions</option>
+        </param>
+        <param name="inclusive" label="Exclude/include named classes" type="select"
+            help="'filter-out' (the default) - exclude only the named sample-classes; 'filter-in' - include only the named sample-classes">
+            <option value="TRUE">filter-in</option>
+            <option value="FALSE" selected="true">filter-out</option>
+        </param>
+        <param name="variableRangeFilter" label="Variable-range filters" type="text" value = ""
+            help="comma-separated filters, each specified as 'variableMetadataColumnName:min:max'; default is no filters.    (See help below.)">
+            <sanitizer>
+                <valid initial="string.letters">
+                    <add preset="string.digits"/>
+                    <add value="&#44;"    /> <!-- comma -->
+                    <add value="&#45;"    /> <!-- dash, hyphen -->
+                    <add value="&#46;"    /> <!-- dot, period -->
+                    <add value="&#58;"    /> <!-- colon -->
+                    <add value="&#95;"    /> <!-- underscore -->
+                </valid>
+            </sanitizer>
+        </param>
+        <param name="transformation" label="Data-transformation" type="select"
+            help="'none' (the default) - do not transform data; 'log2' - log base 2 of data; 'log10' - log base 10 of data; in all cases, negative and missing values are imputed to zero">
+            <option value="none" selected="true">none</option>
+            <option value="log2">log2</option>
+            <option value="log10">log10</option>
+        </param>
+    </inputs>
+    <outputs>
+        <data name="dataMatrix_out" format="tabular" label="${dataMatrix_in.name}.subset" ></data>
+        <data name="sampleMetadata_out" format="tabular" label="${sampleMetadata_in.name}.subset" ></data>
+        <data name="variableMetadata_out" format="tabular" label="${variableMetadata_in.name}.subset" ></data>
+    </outputs>
+    <tests>
+      <!-- test 1 -->
+      <test>
+        <param name="dataMatrix_in" value="input_dataMatrix.tsv"/>
+        <param name="sampleMetadata_in" value="input_sampleMetadata.tsv"/>
+        <param name="variableMetadata_in" value="input_variableMetadata.tsv"/>
+        <param name="classnameColumn" value="gender"/>
+        <param name="sampleclassNames" value="M"/>
+        <param name="wildcards" value="FALSE"/>
+        <param name="inclusive" value="filter-in"/>
+        <param name="variableRangeFilter" value="FEATMAX:6.30103:,mz:200:,rt::800"/>
+        <param name="transformation" value="log10"/>
+        <output name="dataMatrix_out">
+          <assert_contents>
+            <has_text text="5.87336711011293" />
+          </assert_contents>
+        </output>
+        <output name="sampleMetadata_out">
+          <assert_contents>
+            <not_has_text text="HU_028" />
+            <not_has_text text="HU_051" />
+            <not_has_text text="HU_060" />
+            <not_has_text text="HU_110" />
+            <not_has_text text="HU_149" />
+            <not_has_text text="HU_152" />
+            <not_has_text text="HU_175" />
+            <not_has_text text="HU_178" />
+            <not_has_text text="HU_185" />
+            <not_has_text text="HU_204" />
+            <not_has_text text="HU_208" />
+            <has_text text="HU_017" />
+            <has_text text="HU_034" />
+            <has_text text="HU_078" />
+            <has_text text="HU_091" />
+            <has_text text="HU_093" />
+            <has_text text="HU_099" />
+            <has_text text="HU_130" />
+            <has_text text="HU_134" />
+            <has_text text="HU_138" />
+          </assert_contents>
+        </output>
+        <output name="variableMetadata_out">
+          <assert_contents>
+            <not_has_text text="HMDB00191" />
+            <has_text     text="HMDB00208" />
+            <not_has_text text="HMDB00251" />
+            <not_has_text text="HMDB00299" />
+            <not_has_text text="HMDB00512" />
+            <not_has_text text="HMDB00518" />
+            <not_has_text text="HMDB00715" />
+            <not_has_text text="HMDB00822" />
+            <has_text     text="HMDB01032" />
+            <has_text     text="HMDB01101.1" />
+            <not_has_text text="HMDB03193" />
+            <not_has_text text="HMDB04824" />
+            <not_has_text text="HMDB10348" />
+            <has_text     text="HMDB13189" />
+            <not_has_text text="HMDB59717" />
+          </assert_contents>
+        </output>
+      </test>
+      <!-- test 2 -->
+      <test>
+        <param name="dataMatrix_in" value="input_dataMatrix.tsv"/>
+        <param name="sampleMetadata_in" value="input_sampleMetadata.tsv"/>
+        <param name="variableMetadata_in" value="input_variableMetadata.tsv"/>
+        <param name="classnameColumn" value="sampleMetadata"/>
+        <!-- test that hyphens in regular expressions work -->
+        <param name="sampleclassNames" value="HU_[0-9][0-9][0-9]"/>
+        <param name="wildcards" value="FALSE"/>
+        <param name="inclusive" value="filter-in"/>
+        <param name="variableRangeFilter" value="FEATMAX:20.93157:,mz:200:,rt::800"/>
+        <param name="transformation" value="log2"/>
+        <output name="dataMatrix_out">
+          <assert_contents>
+            <has_text text="19.5109032146715" />
+          </assert_contents>
+        </output>
+        <output name="sampleMetadata_out">
+          <assert_contents>
+            <has_text text="HU_028" />
+            <has_text text="HU_051" />
+            <has_text text="HU_060" />
+            <has_text text="HU_110" />
+            <has_text text="HU_149" />
+            <has_text text="HU_152" />
+            <has_text text="HU_175" />
+            <has_text text="HU_178" />
+            <has_text text="HU_185" />
+            <not_has_text text="HU_204" />
+            <has_text text="HU_208" />
+            <has_text text="HU_017" />
+            <has_text text="HU_034" />
+            <has_text text="HU_078" />
+            <has_text text="HU_091" />
+            <has_text text="HU_093" />
+            <has_text text="HU_099" />
+            <has_text text="HU_130" />
+            <has_text text="HU_134" />
+            <has_text text="HU_138" />
+          </assert_contents>
+        </output>
+        <output name="variableMetadata_out">
+          <assert_contents>
+            <has_text     text="HMDB00191" />
+            <has_text     text="HMDB00208" />
+            <not_has_text text="HMDB00251" />
+            <not_has_text text="HMDB00299" />
+            <not_has_text text="HMDB00512" />
+            <not_has_text text="HMDB00518" />
+            <not_has_text text="HMDB00715" />
+            <not_has_text text="HMDB00822" />
+            <has_text     text="HMDB01032" />
+            <has_text     text="HMDB01101.1" />
+            <not_has_text text="HMDB03193" />
+            <not_has_text text="HMDB04824" />
+            <not_has_text text="HMDB10348" />
+            <has_text     text="HMDB13189" />
+            <not_has_text text="HMDB59717" />
+          </assert_contents>
+        </output>
+      </test>
+      <!-- test 3 -->
+      <test>
+        <param name="dataMatrix_in" value="input_dataMatrix.tsv"/>
+        <param name="sampleMetadata_in" value="input_sampleMetadata.tsv"/>
+        <param name="variableMetadata_in" value="input_variableMetadata.tsv"/>
+        <param name="classnameColumn" value="gender"/>
+        <param name="sampleclassNames" value="M"/>
+        <param name="inclusive" value="filter-in"/>
+        <param name="transformation" value="none"/>
+        <output name="dataMatrix_out">
+          <assert_contents>
+            <not_has_text text="HU_028" />
+            <not_has_text text="HU_051" />
+            <not_has_text text="HU_060" />
+            <not_has_text text="HU_110" />
+            <not_has_text text="HU_149" />
+            <not_has_text text="HU_152" />
+            <not_has_text text="HU_175" />
+            <not_has_text text="HU_178" />
+            <not_has_text text="HU_185" />
+            <not_has_text text="HU_204" />
+            <not_has_text text="HU_208" />
+            <has_text     text="HU_017" />
+            <has_text     text="HU_034" />
+            <has_text     text="HU_078" />
+            <has_text     text="HU_091" />
+            <has_text     text="HU_093" />
+            <has_text     text="HU_099" />
+            <has_text     text="HU_130" />
+            <has_text     text="HU_134" />
+            <has_text     text="HU_138" />
+            <has_text     text="HMDB03193" />
+            <not_has_text text="HMDB00822" />
+            <has_text     text="HMDB01101" />
+            <has_text     text="HMDB01101.1" />
+            <has_text     text="HMDB10348" />
+            <has_text     text="HMDB59717" />
+            <has_text     text="HMDB13189" />
+            <has_text     text="HMDB00299" />
+            <has_text     text="HMDB00191" />
+            <has_text     text="HMDB00518" />
+            <has_text     text="HMDB00715" />
+            <has_text     text="HMDB01032" />
+            <has_text     text="HMDB00208" />
+            <has_text     text="HMDB04824" />
+            <has_text     text="HMDB00512" />
+            <has_text     text="HMDB00251" />
+          </assert_contents>
+        </output>
+      </test>
+      <!-- test 4 -->
+      <test>
+        <param name="dataMatrix_in" value="input_dataMatrix.tsv"/>
+        <param name="sampleMetadata_in" value="input_sampleMetadata.tsv"/>
+        <param name="variableMetadata_in" value="input_variableMetadata.tsv"/>
+        <param name="classnameColumn" value="gender"/>
+        <param name="sampleclassNames" value="*"/>
+        <param name="wildcards" value="TRUE"/>
+        <param name="inclusive" value="filter-in"/>
+        <output name="sampleMetadata_out">
+          <assert_contents>
+            <not_has_text text="HU_204" />
+            <has_text text="HU_028" />
+            <has_text text="HU_051" />
+            <has_text text="HU_060" />
+            <has_text text="HU_110" />
+            <has_text text="HU_149" />
+            <has_text text="HU_152" />
+            <has_text text="HU_175" />
+            <has_text text="HU_178" />
+            <has_text text="HU_185" />
+            <has_text text="HU_208" />
+            <has_text text="HU_017" />
+            <has_text text="HU_034" />
+            <has_text text="HU_078" />
+            <has_text text="HU_091" />
+            <has_text text="HU_093" />
+            <has_text text="HU_099" />
+            <has_text text="HU_130" />
+            <has_text text="HU_134" />
+            <has_text text="HU_138" />
+          </assert_contents>
+        </output>
+      </test>
+      <!-- test 5 -->
+      <test>
+        <param name="dataMatrix_in" value="input_dataMatrix.tsv"/>
+        <param name="sampleMetadata_in" value="input_sampleMetadata.tsv"/>
+        <param name="variableMetadata_in" value="input_variableMetadata.tsv"/>
+        <param name="classnameColumn" value="gender"/>
+        <param name="sampleclassNames" value="M"/>
+        <param name="wildcards" value="FALSE"/>
+        <param name="inclusive" value="filter-in"/>
+        <output name="sampleMetadata_out">
+          <assert_contents>
+            <not_has_text text="HU_028" />
+            <not_has_text text="HU_051" />
+            <not_has_text text="HU_060" />
+            <not_has_text text="HU_110" />
+            <not_has_text text="HU_149" />
+            <not_has_text text="HU_152" />
+            <not_has_text text="HU_175" />
+            <not_has_text text="HU_178" />
+            <not_has_text text="HU_185" />
+            <not_has_text text="HU_204" />
+            <not_has_text text="HU_208" />
+            <has_text     text="HU_017" />
+            <has_text     text="HU_034" />
+            <has_text     text="HU_078" />
+            <has_text     text="HU_091" />
+            <has_text     text="HU_093" />
+            <has_text     text="HU_099" />
+            <has_text     text="HU_130" />
+            <has_text     text="HU_134" />
+            <has_text     text="HU_138" />
+          </assert_contents>
+        </output>
+      </test>
+      <!-- test 6 -->
+      <test>
+        <param name="dataMatrix_in" value="input_dataMatrix.tsv"/>
+        <param name="sampleMetadata_in" value="input_sampleMetadata.tsv"/>
+        <param name="variableMetadata_in" value="input_variableMetadata.tsv"/>
+        <param name="classnameColumn" value="gender"/>
+        <param name="sampleclassNames" value="M"/>
+        <param name="wildcards" value="FALSE"/>
+        <param name="inclusive" value="filter-in"/>
+        <output name="variableMetadata_out">
+          <assert_contents>
+            <has_text     text="HMDB03193" />
+            <not_has_text text="HMDB00822" />
+            <has_text     text="HMDB01101" />
+            <has_text     text="HMDB01101.1" />
+            <has_text     text="HMDB10348" />
+            <has_text     text="HMDB59717" />
+            <has_text     text="HMDB13189" />
+            <has_text     text="HMDB00299" />
+            <has_text     text="HMDB00191" />
+            <has_text     text="HMDB00518" />
+            <has_text     text="HMDB00715" />
+            <has_text     text="HMDB01032" />
+            <has_text     text="HMDB00208" />
+            <has_text     text="HMDB04824" />
+            <has_text     text="HMDB00512" />
+            <has_text     text="HMDB00251" />
+          </assert_contents>
+        </output>
+      </test>
+      <!-- test 7 -->
+      <test>
+        <param name="dataMatrix_in" value="input_nofilter_dataMatrix.tsv"/>
+        <param name="sampleMetadata_in" value="input_sampleMetadata.tsv"/>
+        <param name="variableMetadata_in" value="input_variableMetadata.tsv"/>
+        <param name="classnameColumn" value="gender"/>
+        <param name="sampleclassNames" value="M"/>
+        <param name="wildcards" value="FALSE"/>
+        <param name="inclusive" value="filter-in"/>
+        <output name="variableMetadata_out">
+          <assert_contents>
+            <has_text     text="HMDB03193" />
+            <not_has_text text="HMDB00822" />
+            <has_text     text="HMDB01101" />
+            <has_text     text="HMDB01101.1" />
+            <has_text     text="HMDB10348" />
+            <has_text     text="HMDB59717" />
+            <not_has_text text="HMDB13189" />
+            <has_text     text="HMDB00299" />
+            <has_text     text="HMDB00191" />
+            <has_text     text="HMDB00518" />
+            <has_text     text="HMDB00715" />
+            <has_text     text="HMDB01032" />
+            <has_text     text="HMDB00208" />
+            <has_text     text="HMDB04824" />
+            <has_text     text="HMDB00512" />
+            <has_text     text="HMDB00251" />
+          </assert_contents>
+        </output>
+      </test>
+      <!-- test 8 -->
+      <test>
+        <param name="dataMatrix_in" value="input_dataMatrix.tsv"/>
+        <param name="sampleMetadata_in" value="input_sampleMetadata.tsv"/>
+        <param name="variableMetadata_in" value="input_variableMetadata.tsv"/>
+        <param name="classnameColumn" value="gender"/>
+        <param name="sampleclassNames" value="[Mm],[fF]"/>
+        <param name="wildcards" value="FALSE"/>
+        <param name="inclusive" value="filter-in"/>
+        <output name="sampleMetadata_out">
+          <assert_contents>
+            <has_text text="HU_028" />
+            <has_text text="HU_051" />
+            <has_text text="HU_060" />
+            <has_text text="HU_110" />
+            <has_text text="HU_149" />
+            <has_text text="HU_152" />
+            <has_text text="HU_175" />
+            <has_text text="HU_178" />
+            <has_text text="HU_185" />
+            <not_has_text text="HU_204" />
+            <has_text text="HU_208" />
+            <has_text text="HU_017" />
+            <has_text text="HU_034" />
+            <has_text text="HU_078" />
+            <has_text text="HU_091" />
+            <has_text text="HU_093" />
+            <has_text text="HU_099" />
+            <has_text text="HU_130" />
+            <has_text text="HU_134" />
+            <has_text text="HU_138" />
+          </assert_contents>
+        </output>
+      </test>
+      <!-- test 9 -->
+      <test>
+        <param name="dataMatrix_in" value="input_dataMatrix.tsv"/>
+        <param name="sampleMetadata_in" value="input_sampleMetadata.tsv"/>
+        <param name="variableMetadata_in" value="input_variableMetadata.tsv"/>
+        <param name="classnameColumn" value=""/>
+        <param name="sampleclassNames" value="M"/>
+        <param name="wildcards" value="FALSE"/>
+        <param name="inclusive" value="filter-in"/>
+        <output name="sampleMetadata_out">
+          <assert_contents>
+            <has_text text="HU_028" />
+            <has_text text="HU_051" />
+            <has_text text="HU_060" />
+            <has_text text="HU_110" />
+            <has_text text="HU_149" />
+            <has_text text="HU_152" />
+            <has_text text="HU_175" />
+            <has_text text="HU_178" />
+            <has_text text="HU_185" />
+            <not_has_text text="HU_204" />
+            <has_text text="HU_208" />
+            <has_text text="HU_017" />
+            <has_text text="HU_034" />
+            <has_text text="HU_078" />
+            <has_text text="HU_091" />
+            <has_text text="HU_093" />
+            <has_text text="HU_099" />
+            <has_text text="HU_130" />
+            <has_text text="HU_134" />
+            <has_text text="HU_138" />
+          </assert_contents>
+        </output>
+      </test>
+    </tests>
+    <help><![CDATA[
 
 
 **Author** Arthur Eschenlauer (University of Minnesota, esch0041@umn.edu)
@@ -504,7 +506,7 @@ GC-MS and LC-MS experiments seek to resolve as features chemicals that have dist
 Data for a sample are collected as MS intensities, each of which is associated with a position on a 2D plane with dimensions of rt and m/z.
 Ideally, features would be sufficiently reproducible among sample-runs to distinguish features that are commmon among samples from those that differ.
 
-The chromatographic retention-time for a chemical can vary from one chromatography run to the next.  
+The chromatographic retention-time for a chemical can vary from one chromatography run to the next.
 Workflow4Metabolomics (W4m, [Giacomoni *et al.*, 2014, Guitton *et al.* 2017]) is a "flavor" of Galaxy that uses the XCMS preprocessing tools for "retention-time correction" to align features among samples.
 Features may be better aligned if pooled samples and blanks are included.
 
@@ -701,7 +703,7 @@ following order:
 - the **minimum allowed value** in that column for the feature to be retained (e.g., 200);
 - the **maximum allowed value** (e.g., 800).
 
-Note for the range specification strings: 
+Note for the range specification strings:
 
 - **If the "maximum" is less than the "minimum", then the range is exclusive**  (e.g., "mz:800:200" means retain only features whose mz is NOT in the range 200-800)
 - **If the name supplied in the first field is 'FEATMAX',**  then the string is defining the minimum (and possibly, though less useful, maximum) intensity for each feature in the dataMatrix.  For example, "FEATMAX:1e6:" would specify  that any feature would be excluded if no sample had an intensity for that feature greater than 1000000.
@@ -805,106 +807,19 @@ This example retains all samples (except those having zero variance for all feat
 
 -----------------------------------------------------------------------------
 
-----
-NEWS
-----
-
-Changes in version 0.98.9
-=========================
-
-New features
-
-- Fixed bug.
-
-Internal modifications
-
-- Added the hyphen to the characters permitted within regular expressions.
-
-Changes in version 0.98.8
-=========================
-
-New features
-
-- The tool now appears in Galaxy with a new, more representative name: "W4m Data Subset". (Earlier versions of this tool appeared in Galaxy with the name "Sample Subset".)
-- Option was added to log-transform data matrix values.
-- Output datasets are named in conformance with the W4m convention of appending the name of each preprocessing tool to the input dataset name.
-- Superflous "Column that names the sample" input parameter was eliminated.
-- Some documentation was updated or clarified.
-
-Internal modifications
-
-- None
-
-Changes in version 0.98.7
-=========================
-
-New features
-
-- First column of output variableMetadata (that has feature names) now is always named "variableMetadata".
-- First column of output sampleMetadata now (that has sample names) now is always named "sampleMetadata".
-
-Internal modifications
-
-- Now uses w4mclassfilter R package v0.98.7.
-
-Changes in version 0.98.6
-=========================
-
-New features
-
-- Added support for filtering out features whose attributes fall outside specified ranges.
-  For more detail, see "Variable-range filters" above.
-  
-Internal modifications
-
-- Now uses w4mclassfilter R package v0.98.6.
-- Now sorts sample names and feature names in output files because some statistical tools expect the same order in `dataMatrix` row and column names as in the corresponding metadata files.
-
-Changes in version 0.98.3
-=========================
-
-Internal modifications
-
-- Improved input handling.
-- Now uses w4mclassfilter R package v0.98.3, although that version has no functional implications for this tool.
-- Improved reference-list.
-
-Changes in version 0.98.2
-=========================
-
-New features
-
-- Added support for R-flavored regular expression pattern-matching when selecting names of sample-classes.
-- Empty classes argument or zero-length class_column result in no samples filtered out.
-
-Internal modifications
-
-- Support and tests for new features.
-
-Changes in version 0.98.1
-=========================
-
-First release - Wrap the w4mclassfilter R package that implements filtering of W4m data matrix, variable metadata, and sample metadata by class of sample.
-
-New features
-
-- Output *dataMatrix*       is input dataMatrix       as modified by the tool
-- Output *sampleMetadata*   is input sampleMetadata   as modified by the tool
-- Output *variableMetadata* is input variableMetadata as modified by the tool
-
-  ]]></help>
-  <citations>
-    <!-- Giacomoni_2014 W4m 2.5 -->
-    <citation type="doi">10.1093/bioinformatics/btu813</citation>
-    <!-- Guitton_2017 W4m 3.0 -->
-    <citation type="doi">10.1016/j.biocel.2017.07.002</citation>
-    <!-- Kuhl_2012 CAMERA -->
-    <citation type="doi">10.1021/ac202450g</citation>
-    <!-- Smith_2006 XCMS -->
-    <citation type="doi">10.1021/ac051437y</citation>
-    <!-- Thevenot_2015 Urinary metabolome statistics -->
-    <citation type="doi">10.1021/acs.jproteome.5b00354</citation>
-  </citations>
-  <!--
-     vim:noet:sw=2:ts=2
+    ]]></help>
+    <citations>
+        <!-- Giacomoni_2014 W4m 2.5 -->
+        <citation type="doi">10.1093/bioinformatics/btu813</citation>
+        <!-- Guitton_2017 W4m 3.0 -->
+        <citation type="doi">10.1016/j.biocel.2017.07.002</citation>
+        <!-- Kuhl_2012 CAMERA -->
+        <citation type="doi">10.1021/ac202450g</citation>
+        <!-- Smith_2006 XCMS -->
+        <citation type="doi">10.1021/ac051437y</citation>
+        <!-- Thevenot_2015 Urinary metabolome statistics -->
+        <citation type="doi">10.1021/acs.jproteome.5b00354</citation>
+    </citations>
+    <!--
+     vim:noet:sw=4:ts=4
 --> </tool>
