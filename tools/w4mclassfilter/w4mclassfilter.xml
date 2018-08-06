@@ -471,21 +471,6 @@
           </assert_contents>
         </output>
       </test>
-      <!-- test 10 -->
-      <test>
-        <param name="dataMatrix_in" value="input_dataMatrix.tsv"/>
-        <param name="sampleMetadata_in" value="input_sampleMetadata.tsv"/>
-        <param name="variableMetadata_in" value="input_variableMetadata.tsv"/>
-        <param name="classnameColumn" value=""/>
-        <param name="sampleclassNames" value="M"/>
-        <param name="wildcards" value="FALSE"/>
-        <param name="inclusive" value="filter-in"/>
-        <output name="sampleMetadata_out">
-          <assert_contents>
-            <has_text text="this is a deliberately failing test" />
-          </assert_contents>
-        </output>
-      </test>
     </tests>
     <help><![CDATA[
 
