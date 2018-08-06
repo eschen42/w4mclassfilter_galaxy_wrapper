@@ -25,11 +25,11 @@
     ]]></command>
     <inputs>
         <param name="dataMatrix_in" format="tabular" label="Data matrix file" type="data"
-            help="variable x sample, decimal: '.', missing: NA, mode: numerical, separator: tab" />
+            help="variables &#10006; samples" />
         <param name="sampleMetadata_in" format="tabular" label="Sample metadata file" type="data"
-            help="sample x metadata columns, separator: tab" />
+            help="sample metadata, one row per sample" />
         <param name="variableMetadata_in" format="tabular" label="Variable metadata file" type="data"
-            help="variable x metadata columns, separator: tab" />
+            help="variable metadata, one row per variable" />
         <param name="classnameColumn" label="Column that names the sample-class" type="text" value = "class"
             help="name of the column in sample metadata that has the values to be tested against the 'Names of sample-classes' input parameter - defaults to 'class'">
             <sanitizer>
@@ -804,9 +804,6 @@ This example retains all samples (except those having zero variance for all feat
 +-------------------+------------------------------------------------------------------------------------------------------------------------------+
 | Variable metadata | https://raw.githubusercontent.com/HegemanLab/w4mclassfilter_galaxy_wrapper/master/test-data/rangefilter_variableMetadata.tsv |
 +-------------------+------------------------------------------------------------------------------------------------------------------------------+
-
------------------------------------------------------------------------------
-
     ]]></help>
     <citations>
         <!-- Giacomoni_2014 W4m 2.5 -->
