@@ -1,4 +1,6 @@
-[![DOI](https://zenodo.org/badge/90571457.svg)](https://zenodo.org/badge/latestdoi/90571457)
+[![DOI](https://zenodo.org/badge/90571457.svg)](https://zenodo.org/badge/latestdoi/90571457) Latest public release
+
+[![Build Status](https://travis-ci.org/HegemanLab/w4mclassfilter_galaxy_wrapper.svg?branch=master)](https://travis-ci.org/HegemanLab/w4mclassfilter_galaxy_wrapper) Current build status for master branch on GitHub
 
 [Repository 'w4mclassfilter' in Galaxy Toolshed](https://toolshed.g2.bx.psu.edu/repository?repository_id=5f24951d82ab40fa)
 
