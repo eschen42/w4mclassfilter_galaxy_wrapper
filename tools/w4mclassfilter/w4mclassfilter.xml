@@ -722,15 +722,15 @@ WORKING EXAMPLES
 Input Files
 -----------
 
-+------------------------------------------------------------------------------------------------------------------------+
-| Input File URL                                                                                                         |
-+========================================================================================================================+
-| https://raw.githubusercontent.com/HegemanLab/w4mclassfilter_galaxy_wrapper/master/test-data/input_dataMatrix.tsv       |
-+------------------------------------------------------------------------------------------------------------------------+
-| https://raw.githubusercontent.com/HegemanLab/w4mclassfilter_galaxy_wrapper/master/test-data/input_sampleMetadata.tsv   |
-+------------------------------------------------------------------------------------------------------------------------+
-| https://raw.githubusercontent.com/HegemanLab/w4mclassfilter_galaxy_wrapper/master/test-data/input_variableMetadata.tsv |
-+------------------------------------------------------------------------------------------------------------------------+
++------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Input File URL                                                                                                                                       |
++======================================================================================================================================================+
+| https://raw.githubusercontent.com/HegemanLab/w4mclassfilter_galaxy_wrapper/master/tools/w4mclassfilter/test-data/input_dataMatrix.tsv                |
++------------------------------------------------------------------------------------------------------------------------------------------------------+
+| https://raw.githubusercontent.com/HegemanLab/w4mclassfilter_galaxy_wrapper/master/tools/w4mclassfilter/test-data/input_sampleMetadata.tsv            |
++------------------------------------------------------------------------------------------------------------------------------------------------------+
+| https://raw.githubusercontent.com/HegemanLab/w4mclassfilter_galaxy_wrapper/master/tools/w4mclassfilter/test-data/input_variableMetadata.tsv          |
++------------------------------------------------------------------------------------------------------------------------------------------------------+
 
 .. class:: infomark
 
@@ -758,15 +758,15 @@ This example retains only samples whose 'gender' attribute is 'M'.
 
 **Expected outputs**
 
-+-------------------+---------------------------------------------------------------------------------------------------------------------------+
-| Expected Output   | Download from URL                                                                                                         |
-+===================+===========================================================================================================================+
-| Data matrix       | https://raw.githubusercontent.com/HegemanLab/w4mclassfilter_galaxy_wrapper/master/test-data/expected_dataMatrix.tsv       |
-+-------------------+---------------------------------------------------------------------------------------------------------------------------+
-| Sample metadata   | https://raw.githubusercontent.com/HegemanLab/w4mclassfilter_galaxy_wrapper/master/test-data/expected_sampleMetadata.tsv   |
-+-------------------+---------------------------------------------------------------------------------------------------------------------------+
-| Variable metadata | https://raw.githubusercontent.com/HegemanLab/w4mclassfilter_galaxy_wrapper/master/test-data/expected_variableMetadata.tsv |
-+-------------------+---------------------------------------------------------------------------------------------------------------------------+
++-------------------+-------------------------------------------------------------------------------------------------------------------------------------------------+
+| Expected Output   | Download from URL                                                                                                                               |
++===================+=================================================================================================================================================+
+| Data matrix       | https://raw.githubusercontent.com/HegemanLab/w4mclassfilter_galaxy_wrapper/master/tools/w4mclassfilter/test-data/expected_dataMatrix.tsv        |
++-------------------+-------------------------------------------------------------------------------------------------------------------------------------------------+
+| Sample metadata   | https://raw.githubusercontent.com/HegemanLab/w4mclassfilter_galaxy_wrapper/master/tools/w4mclassfilter/test-data/expected_sampleMetadata.tsv    |
++-------------------+-------------------------------------------------------------------------------------------------------------------------------------------------+
+| Variable metadata | https://raw.githubusercontent.com/HegemanLab/w4mclassfilter_galaxy_wrapper/master/tools/w4mclassfilter/test-data/expected_variableMetadata.tsv  |
++-------------------+-------------------------------------------------------------------------------------------------------------------------------------------------+
 
 .. class:: infomark
 
@@ -795,15 +795,15 @@ This example retains all samples (except those having zero variance for all feat
 
 **Expected outputs**
 
-+-------------------+------------------------------------------------------------------------------------------------------------------------------+
-| Expected Output   | Download from URL                                                                                                            |
-+===================+==============================================================================================================================+
-| Data matrix       | https://raw.githubusercontent.com/HegemanLab/w4mclassfilter_galaxy_wrapper/master/test-data/rangefilter_dataMatrix.tsv       |
-+-------------------+------------------------------------------------------------------------------------------------------------------------------+
-| Sample metadata   | https://raw.githubusercontent.com/HegemanLab/w4mclassfilter_galaxy_wrapper/master/test-data/rangefilter_sampleMetadata.tsv   |
-+-------------------+------------------------------------------------------------------------------------------------------------------------------+
-| Variable metadata | https://raw.githubusercontent.com/HegemanLab/w4mclassfilter_galaxy_wrapper/master/test-data/rangefilter_variableMetadata.tsv |
-+-------------------+------------------------------------------------------------------------------------------------------------------------------+
++-------------------+---------------------------------------------------------------------------------------------------------------------------------------------------+
+| Expected Output   | Download from URL                                                                                                                                 |
++===================+===================================================================================================================================================+
+| Data matrix       | https://raw.githubusercontent.com/HegemanLab/w4mclassfilter_galaxy_wrapper/master/tools/w4mclassfilter/test-data/rangefilter_dataMatrix.tsv       |
++-------------------+---------------------------------------------------------------------------------------------------------------------------------------------------+
+| Sample metadata   | https://raw.githubusercontent.com/HegemanLab/w4mclassfilter_galaxy_wrapper/master/tools/w4mclassfilter/test-data/rangefilter_sampleMetadata.tsv   |
++-------------------+---------------------------------------------------------------------------------------------------------------------------------------------------+
+| Variable metadata | https://raw.githubusercontent.com/HegemanLab/w4mclassfilter_galaxy_wrapper/master/tools/w4mclassfilter/test-data/rangefilter_variableMetadata.tsv |
++-------------------+---------------------------------------------------------------------------------------------------------------------------------------------------+
     ]]></help>
     <citations>
         <!-- Giacomoni_2014 W4m 2.5 -->
