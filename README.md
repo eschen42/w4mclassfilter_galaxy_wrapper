@@ -116,6 +116,14 @@ The W4m Data Subset tool may be applied several times sequentially; for example,
 
 ## NEWS
 
+### Changes in version 0.98.10
+
+#### New features
+* none
+
+#### Internal modifications
+* Quality-assurance improvements - Changes for IUC conformance and automated Planemo testing on Travis CI.
+
 ### Changes in version 0.98.9
 
 #### New features
