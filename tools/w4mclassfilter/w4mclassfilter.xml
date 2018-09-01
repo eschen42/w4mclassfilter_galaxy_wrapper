@@ -1,4 +1,4 @@
-<tool id="w4mclassfilter" name="W4m Data Subset" version="0.98.10">
+<tool id="w4mclassfilter" name="W4m Data Subset" version="0.98.11">
     <description>Filter W4m data by values or metadata</description>
     <!-- Here is the hyphenation standard that I *try* to apply consistently in my documentation: http://www.sandranoonan.com/dont-let-hyphenation-drive-crazy/ -->
     <requirements>
@@ -35,7 +35,6 @@
             <sanitizer>
                 <valid initial="string.letters">
                     <add preset="string.digits"/>
-                    <add value="&#45;"    /> <!-- dash, hyphen -->
                     <add value="&#46;"    /> <!-- dot, period -->
                     <add value="&#95;"    /> <!-- underscore -->
                 </valid>
@@ -84,7 +83,6 @@
                 <valid initial="string.letters">
                     <add preset="string.digits"/>
                     <add value="&#44;"    /> <!-- comma -->
-                    <add value="&#45;"    /> <!-- dash, hyphen -->
                     <add value="&#46;"    /> <!-- dot, period -->
                     <add value="&#58;"    /> <!-- colon -->
                     <add value="&#95;"    /> <!-- underscore -->
@@ -587,7 +585,7 @@ Variable metadata file
 	|
 
 Column that names the sample-class (default = '``class``')
-	| name of the column in **sampleMetadata** that has the values to be tested against the '``Names of sample-classes``' input parameter
+	| name of the column in **sampleMetadata** that has the values to be tested against the '``Names of sample-classes``' input parameter; only letters, digits, periods, and underscores are permitted.
 	|
 
 Names of sample-classes (default = no names)
@@ -699,9 +697,9 @@ of `variableMetadata` that fall within the specified ranges will be retained
 in the output.  Each range is a string of three colon-separated values (e.g., "mz:200:800") in the
 following order:
 
-- the **name of a column of `variableMetadata`** which must have numerical data (e.g., "mz");
-- the **minimum allowed value** in that column for the feature to be retained (e.g., 200);
-- the **maximum allowed value** (e.g., 800).
+- the **name of a column of `variableMetadata`** which must have numerical data (only letters, digits, periods, and underscores are permitted in the name itself), e.g., 'mz';
+- the **minimum allowed value** in that column for the feature to be retained, e.g., '200';
+- the **maximum allowed value**, e.g., '800'.
 
 Note for the range specification strings:
 

@@ -116,25 +116,41 @@ The W4m Data Subset tool may be applied several times sequentially; for example,
 
 ## NEWS
 
-### Changes in version 0.98.10
+### Changes in version 0.98.11
 
 #### New features
+
 * none
 
 #### Internal modifications
+
+* Use v0.98.8 of the [w4mclassfilter bioconda package](https://bioconda.github.io/recipes/w4mclassfilter/README.html).
+
+### Changes in version 0.98.10
+
+#### New features
+
+* none
+
+#### Internal modifications
+
 * Quality-assurance improvements - Changes for IUC conformance and automated Planemo testing on Travis CI.
+* Forbid hyphens in sample and variable names because R does not permit them.
 
 ### Changes in version 0.98.9
 
 #### New features
+
 * none
 
 #### Internal modifications
+
 * Added missing support for hyphen character in regular expressions
 
 ### Changes in version 0.98.8
 
 #### New features
+
 * The tool now appears in Galaxy with a new, more representative name: "W4m Data Subset". (Earlier versions of this tool appeared in Galaxy with the name "Sample Subset".)
 * Option was added to log-transform data matrix values.
 * Output datasets are named in conformance with the W4m convention of appending the name of each preprocessing tool to the input dataset name.
@@ -142,11 +158,13 @@ The W4m Data Subset tool may be applied several times sequentially; for example,
 * Some documentation was updated or clarified.
 
 #### Internal modifications
+
 * None
 
 ### Changes in version 0.98.7
 
 #### New features
+
 * First column of output variableMetadata (that has feature names) now is always named `variableMetadata`
 * First column of output sampleMetadata now (that has sample names) is always named `sampleMetadata`
 
@@ -157,30 +175,36 @@ The W4m Data Subset tool may be applied several times sequentially; for example,
 ### Changes in version 0.98.6
 
 #### New features
+
 * Added support for filtering out features whose attributes fall outside specified ranges. For more detail, see "Variable-range filters" above.
 
 #### Internal modifications
+
 * Now uses w4mclassfilter R package v0.98.6.
 * Now sorts sample names and feature names in output files because some statistical tools expect the same order in dataMatrix row and column names as in the corresponding metadata files.
 
 ### Changes in version 0.98.3
 
 #### New features
+
 * Improved reference-list.
 
 #### Internal modifications
+
 * Improved input handling.
 * Now uses w4mclassfilter R package v0.98.3, although that version has no functional implications for this tool.
 
 ### Changes in version 0.98.1
 
 #### New features
+
 * First release - Wrap the w4mclassfilter R package that implements filtering of W4M data matrix, variable metadata, and sample metadata by class of sample.
 * *dataMatrix* *is* modified by the tool, so it *does* appear as an output file
 * *sampleMetadata* *is* modified by the tool, so it *does* appear as an output file
 * *variableMetadata* *is* modified by the tool, so it *does* appear as an output file
 
 #### Internal modifications
+
 * none
 
 ## Citations
