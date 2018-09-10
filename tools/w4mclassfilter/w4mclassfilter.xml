@@ -1,4 +1,4 @@
-<tool id="w4mclassfilter" name="W4m Data Subset" version="0.98.11">
+<tool id="w4mclassfilter" name="W4m Data Subset" version="0.98.12">
     <description>Filter W4m data by values or metadata</description>
     <!-- Here is the hyphenation standard that I *try* to apply consistently in my documentation: http://www.sandranoonan.com/dont-let-hyphenation-drive-crazy/ -->
     <requirements>
@@ -751,7 +751,7 @@ This example retains only samples whose 'gender' attribute is 'M'.
 +------------------------------------+-------------------------------+
 | Variable range-filters             | (Leave this field empty.)     |
 +------------------------------------+-------------------------------+
-| Data transforamtion                | none                          |
+| Data transformation                | none                          |
 +------------------------------------+-------------------------------+
 
 **Expected outputs**
@@ -788,7 +788,7 @@ This example retains all samples (except those having zero variance for all feat
 +------------------------------------+------------------------------------+
 | Variable range-filters             | FEATMAX:20.93157:,mz:200:,rt::800  |
 +------------------------------------+------------------------------------+
-| Data transforamtion                | log2                               |
+| Data transformation                | log2                               |
 +------------------------------------+------------------------------------+
 
 **Expected outputs**
